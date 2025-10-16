@@ -267,5 +267,8 @@ export const safeParseWithZod = <T>(
   data: unknown
 ): { success: true; data: T } | { success: false; errors: z.ZodError } => {
   const result = schema.safeParse(data)
-  return result
+  if (result.success) {
+    return { success: true, data: result.data }
+  }
+  return { success: false, errors: result.error }
 }

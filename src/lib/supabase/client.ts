@@ -1,9 +1,9 @@
 import { createClient } from '@supabase/supabase-js'
 import { createBrowserClient, createServerClient as createSSRClient } from '@supabase/ssr'
 import type { Database } from './types'
+import { getEnvConfig } from '@/common/utils/env'
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+const { supabaseUrl, supabaseAnonKey } = getEnvConfig()
 
 // Client-side Supabase client (for use in client components)
 export const createClientComponentClient = () => {
@@ -13,7 +13,7 @@ export const createClientComponentClient = () => {
 // Server-side Supabase client (for use in server components and API routes)
 export const createServerClient = async () => {
   const { cookies } = await import('next/headers')
-  const cookieStore = cookies()
+  const cookieStore = await cookies()
   
   return createSSRClient<Database>(supabaseUrl, supabaseAnonKey, {
     cookies: {

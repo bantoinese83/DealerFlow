@@ -39,8 +39,6 @@ export function LeadList({
   const filters: LeadFilters = {
     search: searchTerm || undefined,
     status: statusFilter !== 'all' ? statusFilter as Lead['status'] : undefined,
-    sortBy,
-    sortOrder,
     page: 1,
     limit: 50
   }
@@ -54,7 +52,7 @@ export function LeadList({
     return leads.filter(lead => {
       const matchesSearch = !searchTerm || 
         lead.first_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        lead.last_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (lead.last_name?.toLowerCase().includes(searchTerm.toLowerCase()) ?? false) ||
         lead.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
         (lead.phone && lead.phone.includes(searchTerm))
       

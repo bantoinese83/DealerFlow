@@ -7,7 +7,7 @@ import { useCreateLead, useUpdateLead } from '@/common/hooks/useLeads'
 import { Card } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
-import { leadSchema } from '@/common/validation/leadSchema'
+import { createLeadSchema } from '@/common/validation/leadSchema'
 import { X, Save, User, Mail, Phone, Calendar } from 'lucide-react'
 import type { Lead, CreateLeadRequest, UpdateLeadRequest } from '@/common/types'
 
@@ -30,20 +30,19 @@ export function LeadForm({ lead, onSuccess, onCancel, mode = 'create' }: LeadFor
     reset,
     watch
   } = useForm<CreateLeadRequest>({
-    resolver: zodResolver(leadSchema),
+    resolver: zodResolver(createLeadSchema),
     defaultValues: {
       first_name: lead?.first_name || '',
       last_name: lead?.last_name || '',
       email: lead?.email || '',
       phone: lead?.phone || '',
       source: lead?.source || 'website',
-      status: lead?.status || 'new',
       notes: lead?.notes || '',
       follow_up_due_at: lead?.follow_up_due_at || '',
     }
   })
 
-  const watchedStatus = watch('status')
+  const watchedStatus = lead?.status
 
   useEffect(() => {
     if (lead) {
@@ -53,7 +52,6 @@ export function LeadForm({ lead, onSuccess, onCancel, mode = 'create' }: LeadFor
         email: lead.email,
         phone: lead.phone || '',
         source: lead.source,
-        status: lead.status,
         notes: lead.notes || '',
         follow_up_due_at: lead.follow_up_due_at || '',
       })
@@ -66,8 +64,7 @@ export function LeadForm({ lead, onSuccess, onCancel, mode = 'create' }: LeadFor
     try {
       if (mode === 'edit' && lead) {
         const updateData: UpdateLeadRequest = {
-          ...data,
-          updated_at: new Date().toISOString()
+          ...data
         }
         
         const result = await updateLead.mutateAsync({
@@ -75,10 +72,10 @@ export function LeadForm({ lead, onSuccess, onCancel, mode = 'create' }: LeadFor
           data: updateData
         })
         
-        onSuccess?.(result.data)
+        onSuccess?.(result as any)
       } else {
         const result = await createLead.mutateAsync(data)
-        onSuccess?.(result.data)
+        onSuccess?.(result as any)
       }
       
       reset()
@@ -236,25 +233,7 @@ export function LeadForm({ lead, onSuccess, onCancel, mode = 'create' }: LeadFor
               )}
             </div>
 
-            <div>
-              <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-1">
-                Status
-              </label>
-              <select
-                id="status"
-                {...register('status')}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              >
-                <option value="new">New</option>
-                <option value="contacted">Contacted</option>
-                <option value="qualified">Qualified</option>
-                <option value="disqualified">Disqualified</option>
-                <option value="closed">Closed</option>
-              </select>
-              {errors.status && (
-                <p className="mt-1 text-sm text-red-600">{errors.status.message}</p>
-              )}
-            </div>
+            
           </div>
 
           <div className="mt-4">

@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Card } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
-import { crmIntegrationSchema } from '@/common/validation/crmIntegrationSchema'
+import { createCRMIntegrationSchema } from '@/common/validation/crmIntegrationSchema'
 import { cn } from '@/common/utils'
 import { 
   Settings, 
@@ -16,7 +16,6 @@ import {
   CheckCircle,
   Eye,
   EyeOff,
-  ExternalLink,
   TestTube,
   Database,
   Key,
@@ -25,6 +24,7 @@ import {
   Zap
 } from 'lucide-react'
 import type { CRMIntegration } from '@/common/types'
+import type { Path } from 'react-hook-form'
 
 interface CRMIntegrationSettingsProps {
   integration?: CRMIntegration
@@ -39,7 +39,6 @@ export function CRMIntegrationSettings({
   integration, 
   onSave, 
   onTest, 
-  isLoading = false, 
   isSaving = false,
   className 
 }: CRMIntegrationSettingsProps) {
@@ -53,24 +52,11 @@ export function CRMIntegrationSettings({
     handleSubmit,
     formState: { errors, isDirty },
     reset,
-    watch,
-    setValue
+    watch
   } = useForm<CRMIntegration>({
-    resolver: zodResolver(crmIntegrationSchema),
-    defaultValues: {
-      crm_type: integration?.crm_type || 'cdk',
-      api_endpoint: integration?.api_endpoint || '',
-      api_key: integration?.api_key || '',
-      api_secret: integration?.api_secret || '',
-      username: integration?.username || '',
-      password: integration?.password || '',
-      dealership_id: integration?.dealership_id || '',
-      is_active: integration?.is_active || false,
-      sync_frequency_minutes: integration?.sync_frequency_minutes || 60,
-      last_sync_at: integration?.last_sync_at || null,
-      created_at: integration?.created_at || new Date().toISOString(),
-      updated_at: integration?.updated_at || new Date().toISOString()
-    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    resolver: zodResolver(createCRMIntegrationSchema as any),
+    defaultValues: integration
   })
 
   const watchedCrmType = watch('crm_type')
@@ -101,7 +87,8 @@ export function CRMIntegrationSettings({
         success: true,
         message: 'CRM integration test successful! Connection established and credentials verified.'
       })
-    } catch (error) {
+      onTest?.(data)
+    } catch {
       setTestResult({
         success: false,
         message: 'CRM integration test failed. Please check your credentials and try again.'
@@ -119,25 +106,25 @@ export function CRMIntegrationSettings({
 
   const getCrmTypeInfo = (type: string) => {
     switch (type) {
-      case 'cdk':
+      case 'CDK':
         return {
           name: 'CDK Global',
           description: 'Leading automotive retail technology provider',
           logo: 'CDK',
           color: 'bg-blue-100 text-blue-800'
         }
-      case 'reynolds':
+      case 'Reynolds':
         return {
           name: 'Reynolds & Reynolds',
           description: 'Automotive retail management solutions',
           logo: 'R&R',
           color: 'bg-green-100 text-green-800'
         }
-      case 'dealertrack':
+      case 'DealerSocket':
         return {
-          name: 'DealerTrack',
-          description: 'Automotive retail technology platform',
-          logo: 'DT',
+          name: 'DealerSocket',
+          description: 'Automotive CRM platform',
+          logo: 'DS',
           color: 'bg-purple-100 text-purple-800'
         }
       default:
@@ -201,10 +188,10 @@ export function CRMIntegrationSettings({
                   {...register('crm_type')}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
-                  <option value="cdk">CDK Global</option>
-                  <option value="reynolds">Reynolds & Reynolds</option>
-                  <option value="dealertrack">DealerTrack</option>
-                  <option value="custom">Custom CRM</option>
+                  <option value="CDK">CDK Global</option>
+                  <option value="Reynolds">Reynolds & Reynolds</option>
+                  <option value="DealerSocket">DealerSocket</option>
+                  <option value="other">Custom CRM</option>
                 </select>
                 {errors.crm_type && (
                   <p className="mt-1 text-sm text-red-600">{errors.crm_type.message}</p>
@@ -243,13 +230,13 @@ export function CRMIntegrationSettings({
                   <Input
                     id="api_endpoint"
                     type="url"
-                    {...register('api_endpoint')}
+                    {...register('crm_config_json.base_url' as Path<CRMIntegration>)}
                     placeholder="https://api.crm-provider.com/v1"
                     className="pl-10"
                   />
                 </div>
-                {errors.api_endpoint && (
-                  <p className="mt-1 text-sm text-red-600">{errors.api_endpoint.message}</p>
+                {errors.crm_config_json?.base_url && (
+                  <p className="mt-1 text-sm text-red-600">{String(errors.crm_config_json.base_url.message)}</p>
                 )}
               </div>
 
@@ -259,11 +246,11 @@ export function CRMIntegrationSettings({
                 </label>
                 <Input
                   id="dealership_id"
-                  {...register('dealership_id')}
+                  {...register('crm_config_json.dealership_id' as Path<CRMIntegration>)}
                   placeholder="Enter your dealership ID"
                 />
-                {errors.dealership_id && (
-                  <p className="mt-1 text-sm text-red-600">{errors.dealership_id.message}</p>
+                {errors.crm_config_json?.dealership_id && (
+                  <p className="mt-1 text-sm text-red-600">{String(errors.crm_config_json.dealership_id.message)}</p>
                 )}
               </div>
 
@@ -276,7 +263,7 @@ export function CRMIntegrationSettings({
                   <Input
                     id="api_key"
                     type={showApiKey ? 'text' : 'password'}
-                    {...register('api_key')}
+                    {...register('crm_config_json.api_key' as Path<CRMIntegration>)}
                     placeholder="Enter your API key"
                     className="pl-10 pr-10"
                   />
@@ -288,8 +275,8 @@ export function CRMIntegrationSettings({
                     {showApiKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
                 </div>
-                {errors.api_key && (
-                  <p className="mt-1 text-sm text-red-600">{errors.api_key.message}</p>
+                {errors.crm_config_json?.api_key && (
+                  <p className="mt-1 text-sm text-red-600">{String(errors.crm_config_json.api_key.message)}</p>
                 )}
               </div>
 
@@ -302,7 +289,7 @@ export function CRMIntegrationSettings({
                   <Input
                     id="api_secret"
                     type={showSecret ? 'text' : 'password'}
-                    {...register('api_secret')}
+                    {...register('crm_config_json.api_secret' as Path<CRMIntegration>)}
                     placeholder="Enter your API secret"
                     className="pl-10 pr-10"
                   />
@@ -314,51 +301,14 @@ export function CRMIntegrationSettings({
                     {showSecret ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
                 </div>
-                {errors.api_secret && (
-                  <p className="mt-1 text-sm text-red-600">{errors.api_secret.message}</p>
+                {errors.crm_config_json?.api_secret && (
+                  <p className="mt-1 text-sm text-red-600">{String(errors.crm_config_json.api_secret.message)}</p>
                 )}
               </div>
             </div>
           </div>
 
-          {/* Authentication */}
-          <div>
-            <h3 className="text-lg font-medium text-gray-900 mb-4 flex items-center">
-              <Shield className="h-5 w-5 mr-2" />
-              Authentication
-            </h3>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-2">
-                  Username
-                </label>
-                <Input
-                  id="username"
-                  {...register('username')}
-                  placeholder="Enter your username"
-                />
-                {errors.username && (
-                  <p className="mt-1 text-sm text-red-600">{errors.username.message}</p>
-                )}
-              </div>
-
-              <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-                  Password
-                </label>
-                <Input
-                  id="password"
-                  type="password"
-                  {...register('password')}
-                  placeholder="Enter your password"
-                />
-                {errors.password && (
-                  <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
-                )}
-              </div>
-            </div>
-          </div>
+          {/* Authentication - moved to crm_config_json.custom_fields if needed */}
 
           {/* Sync Settings */}
           <div>
@@ -377,10 +327,10 @@ export function CRMIntegrationSettings({
                   type="number"
                   min="5"
                   max="1440"
-                  {...register('sync_frequency_minutes', { valueAsNumber: true })}
+                  {...register('crm_config_json.sync_frequency_minutes' as Path<CRMIntegration>, { valueAsNumber: true })}
                 />
-                {errors.sync_frequency_minutes && (
-                  <p className="mt-1 text-sm text-red-600">{errors.sync_frequency_minutes.message}</p>
+                {errors.crm_config_json?.sync_frequency_minutes && (
+                  <p className="mt-1 text-sm text-red-600">{String(errors.crm_config_json.sync_frequency_minutes.message)}</p>
                 )}
                 <p className="mt-1 text-xs text-gray-500">
                   How often to sync data with your CRM (5-1440 minutes)
@@ -457,7 +407,7 @@ export function CRMIntegrationSettings({
                 <div>
                   <span className="text-gray-600">Sync Frequency:</span>
                   <span className="ml-2 text-gray-900">
-                    Every {integration.sync_frequency_minutes} minutes
+                    Every {integration.crm_config_json.sync_frequency_minutes} minutes
                   </span>
                 </div>
               </div>

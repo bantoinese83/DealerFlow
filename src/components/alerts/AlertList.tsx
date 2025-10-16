@@ -14,7 +14,6 @@ import {
   AlertCircle,
   Info,
   RefreshCw,
-  MarkAsRead,
   Trash2
 } from 'lucide-react'
 import type { Alert } from '@/common/types'

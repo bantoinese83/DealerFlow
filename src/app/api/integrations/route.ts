@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@/lib/supabase/client'
-import { crmIntegrationSchema } from '@/common/validation/crmIntegrationSchema'
+import { createCRMIntegrationSchema } from '@/common/validation/crmIntegrationSchema'
 import { z } from 'zod'
 
 // GET /api/integrations - Get CRM integration settings
@@ -85,7 +85,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     
     // Validate the request body
-    const validatedData = crmIntegrationSchema.parse(body)
+    const validatedData = createCRMIntegrationSchema.parse(body)
 
     // Check if integration already exists
     const { data: existingIntegration } = await supabase
@@ -183,7 +183,7 @@ export async function PUT(request: NextRequest) {
     const body = await request.json()
     
     // Validate the request body
-    const validatedData = crmIntegrationSchema.parse(body)
+    const validatedData = createCRMIntegrationSchema.parse(body)
 
     // Update the integration
     const { data, error } = await supabase

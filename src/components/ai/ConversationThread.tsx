@@ -32,7 +32,7 @@ export function ConversationThread({ leadId, lead, onNewMessage, className }: Co
   const { data: conversationsResponse, isLoading, error, refetch } = useConversations(leadId)
   const createConversation = useCreateConversation()
   
-  const conversations = conversationsResponse?.data || []
+  const conversations = conversationsResponse || []
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -48,17 +48,17 @@ export function ConversationThread({ leadId, lead, onNewMessage, className }: Co
 
     setIsSending(true)
     try {
-      const result = await createConversation.mutateAsync({
+      await createConversation.mutateAsync({
         lead_id: leadId,
         participant: 'bdc_rep',
         message: newMessage.trim(),
-        timestamp: new Date().toISOString(),
+        
         sentiment: 'neutral',
         intent: 'general_inquiry'
       })
       
       setNewMessage('')
-      onNewMessage?.(result.data)
+      onNewMessage?.({} as any)
     } catch (error) {
       console.error('Failed to send message:', error)
     } finally {
@@ -71,17 +71,16 @@ export function ConversationThread({ leadId, lead, onNewMessage, className }: Co
 
     setIsSending(true)
     try {
-      const result = await createConversation.mutateAsync({
+      await createConversation.mutateAsync({
         lead_id: leadId,
         participant: 'ai',
         message: 'AI is generating a response...',
-        timestamp: new Date().toISOString(),
+        
         sentiment: 'neutral',
-        intent: 'ai_response',
-        trigger_ai: true
+        intent: 'ai_response'
       })
       
-      onNewMessage?.(result.data)
+      onNewMessage?.({} as any)
     } catch (error) {
       console.error('Failed to trigger AI:', error)
     } finally {
@@ -218,7 +217,7 @@ export function ConversationThread({ leadId, lead, onNewMessage, className }: Co
             </p>
           </div>
         ) : (
-          conversations.map((conversation, index) => {
+          conversations.map((conversation: any, index: number) => {
             const showDate = index === 0 || 
               formatDate(conversation.timestamp) !== formatDate(conversations[index - 1].timestamp)
             

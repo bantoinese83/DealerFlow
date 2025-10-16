@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { Card } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
-import { useLeads } from '@/common/hooks/useLeads'
+import { useMarkAsContacted, useUpdateLeadStatus } from '@/common/hooks/useLeads'
 import { cn } from '@/common/utils'
 import { 
   Phone, 
@@ -27,7 +27,8 @@ interface LeadCardProps {
 
 export function LeadCard({ lead, onUpdate, onDelete }: LeadCardProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const { updateLeadStatus, markAsContacted } = useLeads()
+  const updateLeadStatus = useUpdateLeadStatus()
+  const markAsContacted = useMarkAsContacted()
 
   const getStatusColor = (status: Lead['status']) => {
     switch (status) {

@@ -1,11 +1,15 @@
 import { createServerClient } from '@/lib/supabase/client'
+import { getEnvConfig } from '@/common/utils/env'
 import type { AIConfig, CreateAIConfigRequest, UpdateAIConfigRequest, AIResponse, AIPromptContext } from '@/common/types'
 
 export class AIService {
-  private supabase = createServerClient()
+  private async getSupabase() {
+    return await createServerClient()
+  }
 
   async getAIConfig(dealershipId: string): Promise<AIConfig | null> {
-    const { data, error } = await this.supabase
+    const supabase = await this.getSupabase()
+    const { data, error } = await supabase
       .from('ai_configs')
       .select('*')
       .eq('dealership_id', dealershipId)
@@ -19,7 +23,8 @@ export class AIService {
   }
 
   async createAIConfig(dealershipId: string, configData: CreateAIConfigRequest): Promise<AIConfig> {
-    const { data, error } = await this.supabase
+    const supabase = await this.getSupabase()
+    const { data, error } = await supabase
       .from('ai_configs')
       .insert({
         ...configData,
@@ -36,7 +41,8 @@ export class AIService {
   }
 
   async updateAIConfig(dealershipId: string, configData: UpdateAIConfigRequest): Promise<AIConfig> {
-    const { data, error } = await this.supabase
+    const supabase = await this.getSupabase()
+    const { data, error } = await supabase
       .from('ai_configs')
       .update(configData)
       .eq('dealership_id', dealershipId)
@@ -64,7 +70,8 @@ export class AIService {
       }
 
       // Call the LLM proxy Edge Function
-      const response = await fetch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/llm-proxy`, {
+      const { supabaseUrl } = getEnvConfig()
+      const response = await fetch(`${supabaseUrl}/functions/v1/llm-proxy`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}`,
@@ -101,7 +108,8 @@ export class AIService {
 
       return result
     } catch (error) {
-      throw new Error(`Failed to generate AI response: ${error.message}`)
+      const msg = error instanceof Error ? error.message : String(error)
+      throw new Error(`Failed to generate AI response: ${msg}`)
     }
   }
 
@@ -113,7 +121,8 @@ export class AIService {
     intent?: string
     ai_model_used?: string
   }): Promise<void> {
-    const { error } = await this.supabase
+    const supabase = await this.getSupabase()
+    const { error } = await supabase
       .from('conversations')
       .insert(conversationData)
 
@@ -123,7 +132,8 @@ export class AIService {
   }
 
   async getConversations(leadId: string): Promise<any[]> {
-    const { data, error } = await this.supabase
+    const supabase = await this.getSupabase()
+    const { data, error } = await supabase
       .from('conversations')
       .select('*')
       .eq('lead_id', leadId)

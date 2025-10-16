@@ -56,9 +56,9 @@ export function VehicleList({
     if (searchTerm) {
       const search = searchTerm.toLowerCase()
       filtered = filtered.filter(vehicle => 
-        vehicle.make.toLowerCase().includes(search) ||
-        vehicle.model.toLowerCase().includes(search) ||
-        vehicle.year.toString().includes(search) ||
+        (vehicle.make?.toLowerCase().includes(search) ?? false) ||
+        (vehicle.model?.toLowerCase().includes(search) ?? false) ||
+        (vehicle.year?.toString().includes(search) ?? false) ||
         vehicle.vin.toLowerCase().includes(search) ||
         (vehicle.trim && vehicle.trim.toLowerCase().includes(search))
       )

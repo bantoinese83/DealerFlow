@@ -19,15 +19,16 @@ import type { CRMIntegration } from '@/common/types'
 // Mock data for demonstration
 const mockCRMIntegration: CRMIntegration = {
   id: 'crm-integration-1',
-  crm_type: 'cdk',
-  api_endpoint: 'https://api.cdkglobal.com/v1',
-  api_key: 'cdk_api_key_12345',
-  api_secret: 'cdk_secret_67890',
-  username: 'dealership_user',
-  password: 'secure_password',
   dealership_id: 'CDK123456',
+  crm_type: 'CDK',
+  crm_config_json: {
+    base_url: 'https://api.cdkglobal.com/v1',
+    api_key: 'cdk_api_key_12345',
+    api_secret: 'cdk_secret_67890',
+    dealership_id: 'CDK123456',
+    sync_frequency_minutes: 60,
+  },
   is_active: true,
-  sync_frequency_minutes: 60,
   last_sync_at: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
   created_at: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
   updated_at: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString()

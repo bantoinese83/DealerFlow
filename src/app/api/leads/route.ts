@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
     const validatedFilters = leadFiltersSchema.parse(filters)
 
     // Get current user to ensure they can only access their dealership's leads
-    const supabase = createServerClient()
+    const supabase = await createServerClient()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
     
     if (authError || !user) {
@@ -49,10 +49,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Add dealership filter
-    const leads = await leadService.getLeads({
-      ...validatedFilters,
-      dealership_id: profile.dealership_id,
-    })
+    const leads = await leadService.getLeads(validatedFilters)
 
     return NextResponse.json(leads)
   } catch (error) {
@@ -69,7 +66,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     
     // Get current user
-    const supabase = createServerClient()
+    const supabase = await createServerClient()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
     
     if (authError || !user) {

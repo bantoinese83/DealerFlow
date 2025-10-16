@@ -1,11 +1,13 @@
-import { supabase as supabaseClient } from '@/lib/supabase/client'
+import { createServerClient, supabase as supabaseClient } from '@/lib/supabase/client'
 import type { Lead, CreateLeadRequest, UpdateLeadRequest, LeadFilters, LeadStats } from '@/common/types'
+import { leadArraySchema, leadSchema, createLeadSchema, updateLeadSchema, leadFiltersSchema } from '@/common/validation'
 
 export class LeadService {
   private supabase = supabaseClient
 
   async getLeads(filters: LeadFilters = {}): Promise<{ data: Lead[]; total: number }> {
-    const { page = 1, limit = 20, ...searchFilters } = filters
+    const validFilters = leadFiltersSchema.parse(filters)
+    const { page, limit, ...searchFilters } = validFilters
     const offset = (page - 1) * limit
 
     let query = this.supabase
@@ -50,8 +52,13 @@ export class LeadService {
       throw new Error(`Failed to fetch leads: ${error.message}`)
     }
 
+    const parsed = leadArraySchema.safeParse(data ?? [])
+    if (!parsed.success) {
+      throw new Error('Failed to parse leads response')
+    }
+
     return {
-      data: data || [],
+      data: parsed.data,
       total: count || 0,
     }
   }
@@ -67,13 +74,14 @@ export class LeadService {
       throw new Error(`Failed to fetch lead: ${error.message}`)
     }
 
-    return data
+    return leadSchema.parse(data)
   }
 
   async createLead(leadData: CreateLeadRequest): Promise<Lead> {
+    const validInput = createLeadSchema.parse(leadData) as any
     const { data, error } = await this.supabase
       .from('leads')
-      .insert(leadData)
+      .insert(validInput as any)
       .select()
       .single()
 
@@ -81,13 +89,14 @@ export class LeadService {
       throw new Error(`Failed to create lead: ${error.message}`)
     }
 
-    return data
+    return leadSchema.parse(data)
   }
 
   async updateLead(id: string, leadData: UpdateLeadRequest): Promise<Lead> {
-    const { data, error } = await this.supabase
+    const validInput = updateLeadSchema.parse(leadData) as any
+    const { data, error } = await (this.supabase as any)
       .from('leads')
-      .update(leadData)
+      .update(validInput)
       .eq('id', id)
       .select()
       .single()
@@ -96,7 +105,7 @@ export class LeadService {
       throw new Error(`Failed to update lead: ${error.message}`)
     }
 
-    return data
+    return leadSchema.parse(data)
   }
 
   async deleteLead(id: string): Promise<void> {
@@ -130,7 +139,7 @@ export class LeadService {
       conversion_rate: 0,
     }
 
-    data.forEach(lead => {
+    data.forEach((lead: any) => {
       switch (lead.status) {
         case 'new':
           stats.new++

@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Card } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
-import { aiConfigSchema } from '@/common/validation/aiConfigSchema'
+import { createAIConfigSchema } from '@/common/validation/aiConfigSchema'
 import { cn } from '@/common/utils'
 import { 
   Bot, 
@@ -50,7 +50,7 @@ export function AIConfigForm({
     watch,
     setValue
   } = useForm<AIConfig>({
-    resolver: zodResolver(aiConfigSchema),
+    resolver: zodResolver(createAIConfigSchema),
     defaultValues: {
       model_name: config?.model_name || 'gpt-4-turbo',
       system_prompt: config?.system_prompt || '',

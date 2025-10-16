@@ -1,4 +1,6 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts"
+// deno-lint-ignore-file no-explicit-any
+declare const Deno: any
 
 interface ScrapeRequest {
   url: string
@@ -88,15 +90,13 @@ Deno.serve(async (req: Request) => {
 
   } catch (error) {
     console.error('Web Scraper Error:', error)
-    
-    const processingTime = Date.now() - Date.now() // This would be calculated properly
-    
+    const details = error instanceof Error ? error.message : String(error)
     return new Response(
       JSON.stringify({ 
         success: false,
         error: 'Failed to scrape vehicle data',
-        details: error.message,
-        processing_time_ms: processingTime
+        details,
+        processing_time_ms: 0
       }),
       { 
         status: 500, 

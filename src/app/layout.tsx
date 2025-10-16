@@ -3,12 +3,13 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import { SupabaseProvider } from '@/lib/providers/SupabaseProvider'
 import { QueryProvider } from '@/lib/providers/QueryProvider'
+import { siteConfig } from '@/config/site'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'DealerFlow AI - AI-Powered BDC Automation',
-  description: 'Transform your dealership\'s Business Development Center with AI-powered lead follow-up, vehicle data scraping, and CRM integration.',
+  title: `${siteConfig.name} - AI-Powered BDC Automation`,
+  description: siteConfig.description,
 }
 
 export default function RootLayout({

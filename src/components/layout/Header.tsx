@@ -3,6 +3,9 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { useAuth } from '@/common/hooks/useAuth'
+import { useNotificationStore } from '@/store/notificationStore'
+import { useUIStore } from '@/store/uiStore'
+import { siteConfig } from '@/config/site'
 import { Button } from '@/components/ui/Button'
 import { 
   Bell, 
@@ -23,6 +26,8 @@ export function Header({ onMenuToggle, isMenuOpen }: HeaderProps) {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false)
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false)
   const { user, profile, signOut } = useAuth()
+  const notifications = useNotificationStore((s) => s.notifications)
+  const toggleSidebar = useUIStore((s) => s.toggleSidebar)
 
   const handleSignOut = async () => {
     await signOut()
@@ -35,7 +40,7 @@ export function Header({ onMenuToggle, isMenuOpen }: HeaderProps) {
           {/* Left side - Logo and menu button */}
           <div className="flex items-center">
             <button
-              onClick={onMenuToggle}
+              onClick={onMenuToggle || toggleSidebar}
               className="lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-600 hover:bg-[hsl(var(--accent))]"
             >
               {isMenuOpen ? (
@@ -51,7 +56,7 @@ export function Header({ onMenuToggle, isMenuOpen }: HeaderProps) {
                   <span className="text-[hsl(var(--primary-foreground))] font-bold text-sm">DF</span>
                 </div>
                 <span className="ml-2 text-xl font-bold text-[hsl(var(--foreground))] hidden sm:block">
-                  DealerFlow AI
+                  {siteConfig.name}
                 </span>
               </div>
             </Link>
@@ -71,7 +76,7 @@ export function Header({ onMenuToggle, isMenuOpen }: HeaderProps) {
               >
                 <Bell className="h-6 w-6" />
                 <span className="absolute -top-1 -right-1 h-4 w-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center" aria-hidden="true">
-                  3
+                  {Math.min(notifications.length, 9)}
                 </span>
               </button>
               

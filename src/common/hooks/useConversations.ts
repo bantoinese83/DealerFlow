@@ -41,19 +41,26 @@ export function useStoreConversation() {
   })
 }
 
+// Backwards-compatible alias used by UI components
+export function useCreateConversation() {
+  return useStoreConversation()
+}
+
 export function useGenerateAIResponse() {
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: ({
       leadId,
+      dealershipId,
       message,
       context,
     }: {
       leadId: string
+      dealershipId: string
       message: string
       context: AIPromptContext
-    }) => aiService.generateAIResponse(leadId, message, context),
+    }) => aiService.generateAIResponse(leadId, dealershipId, message, context),
     onSuccess: (_, { leadId }) => {
       queryClient.invalidateQueries({ queryKey: ['conversations', leadId] })
       queryClient.invalidateQueries({ queryKey: ['conversations', 'summary', leadId] })

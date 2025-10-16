@@ -1,12 +1,12 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { LeadService } from '@/services/leadService'
 import { updateLeadSchema } from '@/common/validation/leadSchema'
 
 const leadService = new LeadService()
 
 export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } }
+  request: Request,
+  { params }: any
 ) {
   try {
     const lead = await leadService.getLeadById(params.id)
@@ -21,8 +21,8 @@ export async function GET(
 }
 
 export async function PUT(
-  request: NextRequest,
-  { params }: { params: { id: string } }
+  request: Request,
+  { params }: any
 ) {
   try {
     const body = await request.json()
@@ -42,8 +42,8 @@ export async function PUT(
 }
 
 export async function DELETE(
-  request: NextRequest,
-  { params }: { params: { id: string } }
+  request: Request,
+  { params }: any
 ) {
   try {
     await leadService.deleteLead(params.id)

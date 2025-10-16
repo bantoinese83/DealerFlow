@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Get current user
-    const supabase = createServerClient()
+    const supabase = await createServerClient()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
     
     if (authError || !user) {
@@ -95,7 +95,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Get current user
-    const supabase = createServerClient()
+    const supabase = await createServerClient()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
     
     if (authError || !user) {
@@ -155,14 +155,21 @@ export async function POST(request: NextRequest) {
         const conversations = await aiService.getConversations(leadId)
         
         // Get preferred vehicle details if exists
-        let preferredVehicle = null
+        let preferredVehicle: { make: string; model: string; year: number; price: number } | undefined
         if (lead.preferred_vehicle_id) {
           const { data: vehicle } = await supabase
             .from('vehicles')
             .select('make, model, year, price')
             .eq('id', lead.preferred_vehicle_id)
             .single()
-          preferredVehicle = vehicle
+          if (vehicle) {
+            preferredVehicle = {
+              make: vehicle.make,
+              model: vehicle.model,
+              year: vehicle.year,
+              price: vehicle.price,
+            }
+          }
         }
 
         // Get dealership context

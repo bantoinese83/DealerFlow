@@ -24,9 +24,7 @@ const mockAlerts: Alert[] = [
     type: 'critical',
     message: 'New qualified lead: Sarah Johnson - High interest in 2024 Honda Accord',
     is_read: false,
-    triggered_at: new Date(Date.now() - 5 * 60 * 1000).toISOString(),
-    created_at: new Date(Date.now() - 5 * 60 * 1000).toISOString(),
-    updated_at: new Date(Date.now() - 5 * 60 * 1000).toISOString()
+    triggered_at: new Date(Date.now() - 5 * 60 * 1000).toISOString()
   },
   {
     id: '2',
@@ -36,9 +34,7 @@ const mockAlerts: Alert[] = [
     type: 'warning',
     message: 'Follow-up overdue: John Smith - Last contacted 3 days ago',
     is_read: false,
-    triggered_at: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-    created_at: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-    updated_at: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString()
+    triggered_at: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString()
   },
   {
     id: '3',
@@ -47,9 +43,7 @@ const mockAlerts: Alert[] = [
     type: 'info',
     message: 'AI generated new lead: Mike Davis - Interested in SUVs',
     is_read: true,
-    triggered_at: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString(),
-    created_at: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString(),
-    updated_at: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString()
+    triggered_at: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString()
   },
   {
     id: '4',
@@ -59,9 +53,7 @@ const mockAlerts: Alert[] = [
     type: 'critical',
     message: 'Negative sentiment detected in conversation with Lisa Brown',
     is_read: true,
-    triggered_at: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(),
-    created_at: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(),
-    updated_at: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString()
+    triggered_at: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString()
   }
 ]
 

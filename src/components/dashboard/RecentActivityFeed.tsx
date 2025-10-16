@@ -20,7 +20,7 @@ import {
   Bot
 } from 'lucide-react'
 
-interface ActivityItem {
+export interface ActivityItem {
   id: string
   type: 'lead_created' | 'lead_updated' | 'conversation' | 'vehicle_scraped' | 'alert' | 'ai_action'
   title: string

@@ -4,6 +4,8 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useAuth } from '@/common/hooks/useAuth'
 import { cn } from '@/common/utils'
+import { useUIStore } from '@/store/uiStore'
+import { siteConfig } from '@/config/site'
 import { 
   LayoutDashboard, 
   Users, 
@@ -38,6 +40,7 @@ const settingsNavigation = [
 export function Sidebar({ isOpen = true, onClose }: SidebarProps) {
   const pathname = usePathname()
   const { profile } = useAuth()
+  const toggleSidebar = useUIStore((s) => s.toggleSidebar)
 
   const isActive = (href: string) => {
     if (href === '/dashboard') {
@@ -69,11 +72,11 @@ export function Sidebar({ isOpen = true, onClose }: SidebarProps) {
                 <span className="text-[hsl(var(--primary-foreground))] font-bold text-sm">DF</span>
               </div>
               <span className="ml-2 text-xl font-bold text-[hsl(var(--foreground))]">
-                DealerFlow AI
+                {siteConfig.name}
               </span>
             </Link>
             <button
-              onClick={onClose}
+              onClick={onClose || toggleSidebar}
               className="lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-600 hover:bg-[hsl(var(--accent))]"
             >
               <X className="h-5 w-5" />

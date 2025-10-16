@@ -1,4 +1,7 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts"
+// deno-lint-ignore-file no-explicit-any
+// Provide ambient Deno for TypeScript checks in non-Deno tooling
+declare const Deno: any
 
 interface LLMRequest {
   lead_id: string
@@ -145,11 +148,11 @@ Please respond as the AI assistant for this dealership. Be helpful, professional
 
   } catch (error) {
     console.error('LLM Proxy Error:', error)
-    
+    const details = error instanceof Error ? error.message : String(error)
     return new Response(
       JSON.stringify({ 
         error: 'Failed to process AI request',
-        details: error.message 
+        details
       }),
       { 
         status: 500, 

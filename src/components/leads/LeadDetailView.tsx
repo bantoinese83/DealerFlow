@@ -36,13 +36,12 @@ export function LeadDetailView({ leadId, onClose, onEdit }: LeadDetailViewProps)
   const [isEditing, setIsEditing] = useState(false)
   const [editData, setEditData] = useState<Partial<Lead>>({})
   
-  const { data: leadResponse, isLoading: leadLoading } = useLead(leadId)
-  const { data: conversationsResponse, isLoading: conversationsLoading } = useConversations(leadId)
+  const { data: lead, isLoading: leadLoading } = useLead(leadId)
+  const { data: conversations = [], isLoading: conversationsLoading } = useConversations(leadId)
   const updateLead = useUpdateLead()
   const deleteLead = useDeleteLead()
 
-  const lead = leadResponse?.data
-  const conversations = conversationsResponse?.data || []
+  
 
   const handleEdit = () => {
     if (lead) {
@@ -269,7 +268,7 @@ export function LeadDetailView({ leadId, onClose, onEdit }: LeadDetailViewProps)
                 {isEditing ? (
                   <select
                     value={editData.source || ''}
-                    onChange={(e) => setEditData(prev => ({ ...prev, source: e.target.value }))}
+                    onChange={(e) => setEditData(prev => ({ ...prev, source: e.target.value as Lead['source'] }))}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="website">Website</option>

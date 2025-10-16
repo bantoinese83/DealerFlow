@@ -34,3 +34,26 @@ export const leadFiltersSchema = z.object({
 export type CreateLeadInput = z.infer<typeof createLeadSchema>
 export type UpdateLeadInput = z.infer<typeof updateLeadSchema>
 export type LeadFiltersInput = z.infer<typeof leadFiltersSchema>
+
+// Runtime-validated Lead record as returned from DB
+export const leadSchema = z.object({
+  id: z.string().uuid(),
+  dealership_id: z.string().uuid(),
+  crm_lead_id: z.string().optional(),
+  first_name: z.string(),
+  last_name: z.string().optional(),
+  email: z.string().email(),
+  phone: z.string().optional(),
+  status: leadStatusSchema,
+  source: leadSourceSchema,
+  assigned_to: z.string().uuid().optional(),
+  preferred_vehicle_id: z.string().uuid().optional(),
+  notes: z.string().optional(),
+  last_contacted_at: z.string().datetime().optional(),
+  follow_up_due_at: z.string().datetime().optional(),
+  created_at: z.string().datetime(),
+  updated_at: z.string().datetime(),
+})
+
+export const leadArraySchema = z.array(leadSchema)
+export type LeadOutput = z.infer<typeof leadSchema>

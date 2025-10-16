@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Get current user
-    const supabase = createServerClient()
+    const supabase = await createServerClient()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
     
     if (authError || !user) {
@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
     const validatedData = createAIConfigSchema.parse(body)
     
     // Get current user
-    const supabase = createServerClient()
+    const supabase = await createServerClient()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
     
     if (authError || !user) {
@@ -120,7 +120,7 @@ export async function PUT(request: NextRequest) {
     const validatedData = updateAIConfigSchema.parse(body)
     
     // Get current user
-    const supabase = createServerClient()
+    const supabase = await createServerClient()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
     
     if (authError || !user) {

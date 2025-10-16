@@ -1,14 +1,18 @@
 import { createServerClient } from '@/lib/supabase/client'
+import { getEnvConfig } from '@/common/utils/env'
 import type { Vehicle, CreateVehicleRequest, UpdateVehicleRequest, VehicleFilters, ScrapeVehicleRequest, ScrapeVehicleResponse } from '@/common/types'
 
 export class VehicleService {
-  private supabase = createServerClient()
+  private async getSupabase() {
+    return await createServerClient()
+  }
 
   async getVehicles(filters: VehicleFilters = {}): Promise<{ data: Vehicle[]; total: number }> {
+    const supabase = await this.getSupabase()
     const { page = 1, limit = 20, ...searchFilters } = filters
     const offset = (page - 1) * limit
 
-    let query = this.supabase
+    let query = supabase
       .from('vehicles')
       .select('*', { count: 'exact' })
 
@@ -53,7 +57,8 @@ export class VehicleService {
   }
 
   async getVehicleById(id: string): Promise<Vehicle> {
-    const { data, error } = await this.supabase
+    const supabase = await this.getSupabase()
+    const { data, error } = await supabase
       .from('vehicles')
       .select('*')
       .eq('id', id)
@@ -67,7 +72,8 @@ export class VehicleService {
   }
 
   async getVehicleByVin(vin: string): Promise<Vehicle | null> {
-    const { data, error } = await this.supabase
+    const supabase = await this.getSupabase()
+    const { data, error } = await supabase
       .from('vehicles')
       .select('*')
       .eq('vin', vin)
@@ -81,7 +87,8 @@ export class VehicleService {
   }
 
   async createVehicle(vehicleData: CreateVehicleRequest): Promise<Vehicle> {
-    const { data, error } = await this.supabase
+    const supabase = await this.getSupabase()
+    const { data, error } = await supabase
       .from('vehicles')
       .insert(vehicleData)
       .select()
@@ -95,7 +102,8 @@ export class VehicleService {
   }
 
   async updateVehicle(id: string, vehicleData: UpdateVehicleRequest): Promise<Vehicle> {
-    const { data, error } = await this.supabase
+    const supabase = await this.getSupabase()
+    const { data, error } = await supabase
       .from('vehicles')
       .update(vehicleData)
       .eq('id', id)
@@ -110,7 +118,8 @@ export class VehicleService {
   }
 
   async deleteVehicle(id: string): Promise<void> {
-    const { error } = await this.supabase
+    const supabase = await this.getSupabase()
+    const { error } = await supabase
       .from('vehicles')
       .delete()
       .eq('id', id)
@@ -123,7 +132,8 @@ export class VehicleService {
   async scrapeVehicle(scrapeData: ScrapeVehicleRequest): Promise<ScrapeVehicleResponse> {
     try {
       // Call the web scraper Edge Function
-      const response = await fetch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/web-scraper`, {
+      const { supabaseUrl } = getEnvConfig()
+      const response = await fetch(`${supabaseUrl}/functions/v1/web-scraper`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}`,
@@ -162,12 +172,14 @@ export class VehicleService {
         job_id: `scrape_${Date.now()}`,
       }
     } catch (error) {
-      throw new Error(`Failed to scrape vehicle: ${error.message}`)
+      const msg = error instanceof Error ? error.message : String(error)
+      throw new Error(`Failed to scrape vehicle: ${msg}`)
     }
   }
 
   async getVehicleMakes(dealershipId: string): Promise<string[]> {
-    const { data, error } = await this.supabase
+    const supabase = await this.getSupabase()
+    const { data, error } = await supabase
       .from('vehicles')
       .select('make')
       .eq('dealership_id', dealershipId)
@@ -181,7 +193,8 @@ export class VehicleService {
   }
 
   async getVehicleModels(dealershipId: string, make?: string): Promise<string[]> {
-    let query = this.supabase
+    const supabase = await this.getSupabase()
+    let query = supabase
       .from('vehicles')
       .select('model')
       .eq('dealership_id', dealershipId)

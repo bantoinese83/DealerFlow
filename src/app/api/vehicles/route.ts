@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { VehicleService } from '@/services/vehicleService'
 import { createServerClient } from '@/lib/supabase/client'
 
+// Instantiate per request to avoid initializing any request-scoped deps at module load
 const vehicleService = new VehicleService()
 
 export async function GET(request: NextRequest) {
@@ -23,7 +24,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Get current user to ensure they can only access their dealership's vehicles
-    const supabase = createServerClient()
+    const supabase = await createServerClient()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
     
     if (authError || !user) {
@@ -47,7 +48,10 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    const vehicles = await vehicleService.getVehicles(filters)
+    const vehicles = await vehicleService.getVehicles({
+      ...filters,
+      availability_status: filters.availability_status as any,
+    })
     return NextResponse.json(vehicles)
   } catch (error) {
     console.error('Error fetching vehicles:', error)
@@ -63,7 +67,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     
     // Get current user
-    const supabase = createServerClient()
+    const supabase = await createServerClient()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
     
     if (authError || !user) {
