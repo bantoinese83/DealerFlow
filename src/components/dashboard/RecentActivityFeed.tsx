@@ -81,19 +81,19 @@ export function RecentActivityFeed({
   const getActivityColor = (type: ActivityItem['type']) => {
     switch (type) {
       case 'lead_created':
-        return 'text-green-600 bg-green-100'
+        return 'text-[hsl(var(--cosmic-green))] bg-green-500/20'
       case 'lead_updated':
-        return 'text-blue-600 bg-blue-100'
+        return 'text-[hsl(var(--cosmic-blue))] bg-blue-500/20'
       case 'conversation':
-        return 'text-purple-600 bg-purple-100'
+        return 'text-[hsl(var(--cosmic-purple))] bg-purple-500/20'
       case 'vehicle_scraped':
-        return 'text-orange-600 bg-orange-100'
+        return 'text-[hsl(var(--cosmic-orange))] bg-orange-500/20'
       case 'alert':
-        return 'text-red-600 bg-red-100'
+        return 'text-red-400 bg-red-500/20'
       case 'ai_action':
-        return 'text-indigo-600 bg-indigo-100'
+        return 'text-[hsl(var(--cosmic-cyan))] bg-cyan-500/20'
       default:
-        return 'text-gray-600 bg-gray-100'
+        return 'text-gray-400 bg-gray-500/20'
     }
   }
 
@@ -166,8 +166,8 @@ export function RecentActivityFeed({
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h3 className="text-lg font-semibold text-gray-900">Recent Activity</h3>
-          <p className="text-sm text-gray-600">Latest updates from your dealership</p>
+          <h3 className="text-lg font-semibold text-white">Recent Activity</h3>
+          <p className="text-sm text-gray-300">Latest updates from your dealership</p>
         </div>
         <div className="flex items-center space-x-2">
           <Button
@@ -189,7 +189,7 @@ export function RecentActivityFeed({
         <select
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+          className="w-full px-3 py-2 border border-[hsl(var(--border))] bg-[hsl(var(--input))] text-white rounded-md focus:outline-none focus:ring-2 focus:ring-[hsl(var(--cosmic-purple))] focus:border-transparent text-sm"
         >
           {filterOptions.map(option => (
             <option key={option.value} value={option.value}>
@@ -218,8 +218,8 @@ export function RecentActivityFeed({
         ) : filteredActivities.length === 0 ? (
           <div className="text-center py-8">
             <Clock className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No recent activity</h3>
-            <p className="text-gray-600">
+            <h3 className="text-lg font-medium text-white mb-2">No recent activity</h3>
+            <p className="text-gray-300">
               {filter === 'all' 
                 ? 'Activity will appear here as things happen in your dealership.'
                 : 'No activity of this type found.'
@@ -230,7 +230,7 @@ export function RecentActivityFeed({
           filteredActivities.map((activity) => (
             <div
               key={activity.id}
-              className="flex items-start space-x-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
+              className="flex items-start space-x-3 p-3 rounded-lg hover:bg-[hsl(var(--accent))] cursor-pointer transition-all duration-200"
               onClick={() => handleActivityClick(activity)}
             >
               <div className={cn(
@@ -243,21 +243,21 @@ export function RecentActivityFeed({
               <div className="flex-1 min-w-0">
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
-                    <p className="text-sm font-medium text-gray-900">
+                    <p className="text-sm font-medium text-white">
                       {activity.title}
                     </p>
-                    <p className="text-sm text-gray-600 mt-1">
+                    <p className="text-sm text-gray-300 mt-1">
                       {activity.description}
                     </p>
                     
                     {activity.user && (
                       <div className="flex items-center mt-2">
-                        <div className="h-5 w-5 bg-gray-300 rounded-full flex items-center justify-center mr-2">
-                          <span className="text-xs font-medium text-gray-700">
+                        <div className="h-5 w-5 cosmic-gradient rounded-full flex items-center justify-center mr-2">
+                          <span className="text-xs font-medium text-white">
                             {activity.user.name.charAt(0)}
                           </span>
                         </div>
-                        <span className="text-xs text-gray-500">
+                        <span className="text-xs text-gray-400">
                           by {activity.user.name}
                         </span>
                       </div>
@@ -266,7 +266,7 @@ export function RecentActivityFeed({
 
                   <div className="flex items-center space-x-2 ml-4">
                     {getAlertIcon(activity.type)}
-                    <span className="text-xs text-gray-500">
+                    <span className="text-xs text-gray-400">
                       {formatTime(activity.timestamp)}
                     </span>
                     <ArrowUpRight className="h-3 w-3 text-gray-400" />
@@ -278,13 +278,13 @@ export function RecentActivityFeed({
                     {Object.entries(activity.metadata).slice(0, 3).map(([key, value]) => (
                       <span
                         key={key}
-                        className="inline-flex items-center px-2 py-1 rounded text-xs bg-gray-100 text-gray-700"
+                        className="inline-flex items-center px-2 py-1 rounded text-xs bg-gray-500/20 text-gray-300"
                       >
                         {key}: {String(value)}
                       </span>
                     ))}
                     {Object.keys(activity.metadata).length > 3 && (
-                      <span className="inline-flex items-center px-2 py-1 rounded text-xs bg-gray-100 text-gray-700">
+                      <span className="inline-flex items-center px-2 py-1 rounded text-xs bg-gray-500/20 text-gray-300">
                         +{Object.keys(activity.metadata).length - 3} more
                       </span>
                     )}
@@ -298,7 +298,7 @@ export function RecentActivityFeed({
 
       {/* Load More */}
       {filteredActivities.length >= showCount && activities.length > showCount && (
-        <div className="pt-4 border-t border-gray-200">
+        <div className="pt-4 border-t border-[hsl(var(--border))]">
           <Button
             variant="outline"
             size="sm"

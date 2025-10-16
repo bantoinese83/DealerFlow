@@ -22,14 +22,14 @@ export default function RootLayout({
       <body className={inter.className}>
         <a
           href="#main-content"
-          className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 bg-white text-blue-700 border border-blue-300 px-3 py-2 rounded"
+          className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 glass-effect text-white border border-[hsl(var(--cosmic-purple))] px-3 py-2 rounded"
         >
           Skip to content
         </a>
         <QueryProvider>
           <SupabaseProvider>
-            <div className="min-h-screen bg-background">
-              <main id="main-content" role="main">
+            <div className="min-h-screen bg-background relative">
+              <main id="main-content" role="main" className="relative z-10">
                 {children}
               </main>
             </div>

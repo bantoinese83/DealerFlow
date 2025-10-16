@@ -32,12 +32,12 @@ export default function DashboardPage() {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-semibold text-[hsl(var(--foreground))] tracking-tight">Dashboard</h1>
-          <p className="text-muted-foreground">Welcome back! Here&apos;s what&apos;s happening with your BDC.</p>
+          <h1 className="text-3xl font-bold text-white tracking-tight">Dashboard</h1>
+          <p className="text-gray-300 mt-2">Welcome back! Here&apos;s what&apos;s happening with your BDC.</p>
         </div>
         <div className="flex space-x-3">
           <Link href="/leads/new">
-            <Button className="btn-primary">
+            <Button className="cosmic-gradient">
               <Plus className="h-4 w-4 mr-2" />
               New Lead
             </Button>

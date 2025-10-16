@@ -147,21 +147,21 @@ export function AlertList({
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900 flex items-center">
-            <Bell className="h-6 w-6 mr-2" />
+          <h2 className="text-2xl font-bold text-white flex items-center">
+            <Bell className="h-6 w-6 mr-2 text-[hsl(var(--cosmic-purple))]" />
             Alerts
             {unreadCount > 0 && (
-              <span className="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+              <span className="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-500/20 text-[hsl(var(--cosmic-orange))] border border-orange-500/30">
                 {unreadCount} unread
               </span>
             )}
             {criticalCount > 0 && (
-              <span className="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+              <span className="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-500/20 text-red-400 border border-red-500/30">
                 {criticalCount} critical
               </span>
             )}
           </h2>
-          <p className="text-gray-600">
+          <p className="text-gray-300">
             {filteredAlerts.length} of {alerts.length} alerts
           </p>
         </div>
@@ -198,7 +198,7 @@ export function AlertList({
       </div>
 
       {/* Filters */}
-      <div className="bg-white p-4 rounded-lg border border-gray-200 space-y-4">
+      <div className="glass-effect p-4 rounded-lg border border-[hsl(var(--border))] space-y-4">
         <div className="flex flex-col sm:flex-row gap-4">
           {/* Search */}
           <div className="flex-1">
@@ -218,7 +218,7 @@ export function AlertList({
             <select
               value={typeFilter}
               onChange={(e) => setTypeFilter(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-[hsl(var(--border))] bg-[hsl(var(--input))] text-white rounded-md focus:outline-none focus:ring-2 focus:ring-[hsl(var(--cosmic-purple))] focus:border-transparent"
             >
               {typeOptions.map(option => (
                 <option key={option.value} value={option.value}>
@@ -233,7 +233,7 @@ export function AlertList({
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-[hsl(var(--border))] bg-[hsl(var(--input))] text-white rounded-md focus:outline-none focus:ring-2 focus:ring-[hsl(var(--cosmic-purple))] focus:border-transparent"
             >
               {statusOptions.map(option => (
                 <option key={option.value} value={option.value}>
@@ -252,7 +252,7 @@ export function AlertList({
                 setSortBy(field as typeof sortBy)
                 setSortOrder(order as typeof sortOrder)
               }}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-[hsl(var(--border))] bg-[hsl(var(--input))] text-white rounded-md focus:outline-none focus:ring-2 focus:ring-[hsl(var(--cosmic-purple))] focus:border-transparent"
             >
               <option value="triggered_at-desc">Newest First</option>
               <option value="triggered_at-asc">Oldest First</option>
@@ -281,8 +281,8 @@ export function AlertList({
         <div className="text-center py-12">
           <div className="text-gray-400 mb-4">
             <Bell className="h-12 w-12 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No alerts found</h3>
-            <p className="text-gray-600">
+            <h3 className="text-lg font-medium text-white mb-2">No alerts found</h3>
+            <p className="text-gray-300">
               {searchTerm || typeFilter !== 'all' || statusFilter !== 'all'
                 ? 'Try adjusting your search or filter criteria.'
                 : 'You&apos;re all caught up! No alerts at the moment.'

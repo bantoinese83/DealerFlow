@@ -116,11 +116,11 @@ export default function AlertsPage() {
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-semibold text-[hsl(var(--foreground))] tracking-tight flex items-center">
-            <Bell className="h-8 w-8 mr-3" />
+          <h1 className="text-3xl font-bold text-white tracking-tight flex items-center">
+            <Bell className="h-8 w-8 mr-3 text-[hsl(var(--cosmic-purple))]" />
             Alerts
           </h1>
-          <p className="text-muted-foreground mt-1">
+          <p className="text-gray-300 mt-1">
             Stay informed about important events and updates in your dealership
           </p>
         </div>
@@ -134,7 +134,7 @@ export default function AlertsPage() {
             <RefreshCw className={cn("h-4 w-4 mr-2", isLoading && "animate-spin")} />
             Refresh
           </Button>
-          <Button>
+          <Button className="cosmic-gradient">
             <Settings className="h-4 w-4 mr-2" />
             Alert Settings
           </Button>
@@ -145,48 +145,48 @@ export default function AlertsPage() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <Card className="card p-6">
           <div className="flex items-center">
-            <div className="h-12 w-12 bg-[hsl(var(--accent))] rounded-lg flex items-center justify-center">
-              <Bell className="h-6 w-6 text-[hsl(var(--primary))]" />
+            <div className="h-12 w-12 cosmic-gradient rounded-lg flex items-center justify-center shadow-lg">
+              <Bell className="h-6 w-6 text-white" />
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-muted-foreground">Total Alerts</p>
-              <p className="text-2xl font-bold text-[hsl(var(--foreground))]">{alerts.length}</p>
+              <p className="text-sm font-medium text-gray-300">Total Alerts</p>
+              <p className="text-2xl font-bold text-white">{alerts.length}</p>
             </div>
           </div>
         </Card>
 
         <Card className="card p-6">
           <div className="flex items-center">
-            <div className="h-12 w-12 bg-[hsl(var(--accent))] rounded-lg flex items-center justify-center">
-              <Bell className="h-6 w-6 text-[hsl(var(--foreground))]" />
+            <div className="h-12 w-12 bg-orange-500/20 rounded-lg flex items-center justify-center border border-orange-500/30">
+              <Bell className="h-6 w-6 text-[hsl(var(--cosmic-orange))]" />
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-muted-foreground">Unread</p>
-              <p className="text-2xl font-bold text-[hsl(var(--foreground))]">{unreadCount}</p>
+              <p className="text-sm font-medium text-gray-300">Unread</p>
+              <p className="text-2xl font-bold text-white">{unreadCount}</p>
             </div>
           </div>
         </Card>
 
         <Card className="card p-6">
           <div className="flex items-center">
-            <div className="h-12 w-12 bg-[hsl(var(--accent))] rounded-lg flex items-center justify-center">
-              <Bell className="h-6 w-6 text-[hsl(var(--foreground))]" />
+            <div className="h-12 w-12 bg-red-500/20 rounded-lg flex items-center justify-center border border-red-500/30">
+              <Bell className="h-6 w-6 text-red-400" />
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-muted-foreground">Critical</p>
-              <p className="text-2xl font-bold text-[hsl(var(--foreground))]">{criticalCount}</p>
+              <p className="text-sm font-medium text-gray-300">Critical</p>
+              <p className="text-2xl font-bold text-white">{criticalCount}</p>
             </div>
           </div>
         </Card>
 
         <Card className="card p-6">
           <div className="flex items-center">
-            <div className="h-12 w-12 bg-[hsl(var(--accent))] rounded-lg flex items-center justify-center">
-              <Bell className="h-6 w-6 text-[hsl(var(--foreground))]" />
+            <div className="h-12 w-12 bg-green-500/20 rounded-lg flex items-center justify-center border border-green-500/30">
+              <Bell className="h-6 w-6 text-[hsl(var(--cosmic-green))]" />
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-muted-foreground">Resolved</p>
-              <p className="text-2xl font-bold text-[hsl(var(--foreground))]">{alerts.length - unreadCount}</p>
+              <p className="text-sm font-medium text-gray-300">Resolved</p>
+              <p className="text-2xl font-bold text-white">{alerts.length - unreadCount}</p>
             </div>
           </div>
         </Card>

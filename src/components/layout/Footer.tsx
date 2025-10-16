@@ -6,27 +6,27 @@ export function Footer() {
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer className="bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60 border-t border-[hsl(var(--border))]">
+    <footer className="glass-effect border-t border-[hsl(var(--border))]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Company Info */}
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center mb-4">
-              <div className="h-8 w-8 bg-[hsl(var(--primary))] rounded-lg flex items-center justify-center">
-                <span className="text-[hsl(var(--primary-foreground))] font-bold text-sm">DF</span>
+              <div className="h-8 w-8 cosmic-gradient rounded-lg flex items-center justify-center shadow-lg">
+                <span className="text-white font-bold text-sm">DF</span>
               </div>
-              <span className="ml-2 text-xl font-bold text-[hsl(var(--foreground))]">
+              <span className="ml-2 text-xl font-bold text-white">
                 DealerFlow AI
               </span>
             </div>
-            <p className="text-muted-foreground text-sm mb-4 max-w-md">
+            <p className="text-gray-300 text-sm mb-4 max-w-md">
               Transform your dealership&apos;s Business Development Center with AI-powered 
               lead follow-up, real-time vehicle data scraping, and seamless CRM integration.
             </p>
             <div className="flex space-x-4">
               <a
                 href="#"
-                className="text-muted-foreground hover:text-[hsl(var(--foreground))] transition-colors"
+                className="text-gray-400 hover:text-white transition-all duration-200"
               >
                 <span className="sr-only">Twitter</span>
                 <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
@@ -35,7 +35,7 @@ export function Footer() {
               </a>
               <a
                 href="#"
-                className="text-muted-foreground hover:text-[hsl(var(--foreground))] transition-colors"
+                className="text-gray-400 hover:text-white transition-all duration-200"
               >
                 <span className="sr-only">LinkedIn</span>
                 <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
@@ -47,27 +47,27 @@ export function Footer() {
 
           {/* Product Links */}
           <div>
-            <h3 className="text-sm font-semibold text-[hsl(var(--foreground))] uppercase tracking-wider mb-4">
+            <h3 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">
               Product
             </h3>
             <ul className="space-y-3">
               <li>
-                <Link href="/features" className="text-muted-foreground hover:text-[hsl(var(--foreground))] text-sm transition-colors">
+                <Link href="/features" className="text-gray-300 hover:text-white text-sm transition-all duration-200">
                   Features
                 </Link>
               </li>
               <li>
-                <Link href="/pricing" className="text-muted-foreground hover:text-[hsl(var(--foreground))] text-sm transition-colors">
+                <Link href="/pricing" className="text-gray-300 hover:text-white text-sm transition-all duration-200">
                   Pricing
                 </Link>
               </li>
               <li>
-                <Link href="/integrations" className="text-muted-foreground hover:text-[hsl(var(--foreground))] text-sm transition-colors">
+                <Link href="/integrations" className="text-gray-300 hover:text-white text-sm transition-all duration-200">
                   Integrations
                 </Link>
               </li>
               <li>
-                <Link href="/api" className="text-muted-foreground hover:text-[hsl(var(--foreground))] text-sm transition-colors">
+                <Link href="/api" className="text-gray-300 hover:text-white text-sm transition-all duration-200">
                   API
                 </Link>
               </li>
@@ -76,27 +76,27 @@ export function Footer() {
 
           {/* Support Links */}
           <div>
-            <h3 className="text-sm font-semibold text-[hsl(var(--foreground))] uppercase tracking-wider mb-4">
+            <h3 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">
               Support
             </h3>
             <ul className="space-y-3">
               <li>
-                <Link href="/help" className="text-muted-foreground hover:text-[hsl(var(--foreground))] text-sm transition-colors">
+                <Link href="/help" className="text-gray-300 hover:text-white text-sm transition-all duration-200">
                   Help Center
                 </Link>
               </li>
               <li>
-                <Link href="/docs" className="text-muted-foreground hover:text-[hsl(var(--foreground))] text-sm transition-colors">
+                <Link href="/docs" className="text-gray-300 hover:text-white text-sm transition-all duration-200">
                   Documentation
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="text-muted-foreground hover:text-[hsl(var(--foreground))] text-sm transition-colors">
+                <Link href="/contact" className="text-gray-300 hover:text-white text-sm transition-all duration-200">
                   Contact Us
                 </Link>
               </li>
               <li>
-                <Link href="/status" className="text-muted-foreground hover:text-[hsl(var(--foreground))] text-sm transition-colors">
+                <Link href="/status" className="text-gray-300 hover:text-white text-sm transition-all duration-200">
                   Status
                 </Link>
               </li>
@@ -108,17 +108,17 @@ export function Footer() {
         <div className="mt-8 pt-8 border-t border-[hsl(var(--border))]">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex space-x-6 mb-4 md:mb-0">
-              <Link href="/privacy" className="text-muted-foreground hover:text-[hsl(var(--foreground))] text-sm transition-colors">
+              <Link href="/privacy" className="text-gray-300 hover:text-white text-sm transition-all duration-200">
                 Privacy Policy
               </Link>
-              <Link href="/terms" className="text-muted-foreground hover:text-[hsl(var(--foreground))] text-sm transition-colors">
+              <Link href="/terms" className="text-gray-300 hover:text-white text-sm transition-all duration-200">
                 Terms of Service
               </Link>
-              <Link href="/security" className="text-muted-foreground hover:text-[hsl(var(--foreground))] text-sm transition-colors">
+              <Link href="/security" className="text-gray-300 hover:text-white text-sm transition-all duration-200">
                 Security
               </Link>
             </div>
-            <p className="text-muted-foreground text-sm">
+            <p className="text-gray-300 text-sm">
               © {currentYear} DealerFlow AI. All rights reserved.
             </p>
           </div>

@@ -34,14 +34,14 @@ export function Header({ onMenuToggle, isMenuOpen }: HeaderProps) {
   }
 
   return (
-    <header className="bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60 border-b border-[hsl(var(--border))]">
+    <header className="glass-effect border-b border-[hsl(var(--border))]">
       <div className="px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Left side - Logo and menu button */}
           <div className="flex items-center">
             <button
               onClick={onMenuToggle || toggleSidebar}
-              className="lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-600 hover:bg-[hsl(var(--accent))]"
+              className="lg:hidden p-2 rounded-md text-gray-300 hover:text-white hover:bg-[hsl(var(--accent))] transition-all duration-200"
             >
               {isMenuOpen ? (
                 <X className="h-6 w-6" />
@@ -52,10 +52,10 @@ export function Header({ onMenuToggle, isMenuOpen }: HeaderProps) {
             
             <Link href="/dashboard" className="ml-2 lg:ml-0" aria-label="Go to dashboard">
               <div className="flex items-center">
-                <div className="h-8 w-8 bg-[hsl(var(--primary))] rounded-lg flex items-center justify-center" aria-hidden="true">
-                  <span className="text-[hsl(var(--primary-foreground))] font-bold text-sm">DF</span>
+                <div className="h-8 w-8 cosmic-gradient rounded-lg flex items-center justify-center shadow-lg" aria-hidden="true">
+                  <span className="text-white font-bold text-sm">DF</span>
                 </div>
-                <span className="ml-2 text-xl font-bold text-[hsl(var(--foreground))] hidden sm:block">
+                <span className="ml-2 text-xl font-bold text-white hidden sm:block">
                   {siteConfig.name}
                 </span>
               </div>
@@ -68,7 +68,7 @@ export function Header({ onMenuToggle, isMenuOpen }: HeaderProps) {
             <div className="relative">
               <button
                 onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
-                className="p-2 text-gray-400 hover:text-gray-600 hover:bg-[hsl(var(--accent))] rounded-md relative"
+                className="p-2 text-gray-300 hover:text-white hover:bg-[hsl(var(--accent))] rounded-md relative transition-all duration-200"
                 aria-haspopup="dialog"
                 aria-expanded={isNotificationsOpen}
                 aria-controls="header-notifications"
@@ -81,22 +81,22 @@ export function Header({ onMenuToggle, isMenuOpen }: HeaderProps) {
               </button>
               
               {isNotificationsOpen && (
-                <div id="header-notifications" role="dialog" aria-label="Notifications" className="absolute right-0 mt-2 w-80 bg-white rounded-md shadow-lg border border-[hsl(var(--border))] z-50">
+                <div id="header-notifications" role="dialog" aria-label="Notifications" className="absolute right-0 mt-2 w-80 glass-effect rounded-md shadow-lg border border-[hsl(var(--border))] z-50">
                   <div className="p-4 border-b border-[hsl(var(--border))]">
-                    <h3 className="text-lg font-medium text-[hsl(var(--foreground))]">Notifications</h3>
+                    <h3 className="text-lg font-medium text-white">Notifications</h3>
                   </div>
                   <div className="max-h-64 overflow-y-auto">
-                    <div className="p-4 border-b border-[hsl(var(--border))] hover:bg-[hsl(var(--accent))]">
-                      <p className="text-sm text-[hsl(var(--foreground))]">New qualified lead: Sarah Johnson</p>
-                      <p className="text-xs text-muted-foreground mt-1">5 minutes ago</p>
+                    <div className="p-4 border-b border-[hsl(var(--border))] hover:bg-[hsl(var(--accent))] transition-all duration-200">
+                      <p className="text-sm text-white">New qualified lead: Sarah Johnson</p>
+                      <p className="text-xs text-gray-400 mt-1">5 minutes ago</p>
                     </div>
-                    <div className="p-4 border-b border-[hsl(var(--border))] hover:bg-[hsl(var(--accent))]">
-                      <p className="text-sm text-[hsl(var(--foreground))]">Follow-up overdue: John Smith</p>
-                      <p className="text-xs text-muted-foreground mt-1">1 hour ago</p>
+                    <div className="p-4 border-b border-[hsl(var(--border))] hover:bg-[hsl(var(--accent))] transition-all duration-200">
+                      <p className="text-sm text-white">Follow-up overdue: John Smith</p>
+                      <p className="text-xs text-gray-400 mt-1">1 hour ago</p>
                     </div>
-                    <div className="p-4 hover:bg-[hsl(var(--accent))]">
-                      <p className="text-sm text-[hsl(var(--foreground))]">AI generated new lead: Mike Davis</p>
-                      <p className="text-xs text-muted-foreground mt-1">2 hours ago</p>
+                    <div className="p-4 hover:bg-[hsl(var(--accent))] transition-all duration-200">
+                      <p className="text-sm text-white">AI generated new lead: Mike Davis</p>
+                      <p className="text-xs text-gray-400 mt-1">2 hours ago</p>
                     </div>
                   </div>
                   <div className="p-4 border-t border-[hsl(var(--border))]">
@@ -112,30 +112,30 @@ export function Header({ onMenuToggle, isMenuOpen }: HeaderProps) {
             <div className="relative">
               <button
                 onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                className="flex items-center space-x-3 p-2 rounded-md hover:bg-[hsl(var(--accent))]"
+                className="flex items-center space-x-3 p-2 rounded-md hover:bg-[hsl(var(--accent))] transition-all duration-200"
                 aria-haspopup="menu"
                 aria-expanded={isUserMenuOpen}
                 aria-controls="user-menu"
                 aria-label="Open user menu"
               >
-                <div className="h-8 w-8 bg-[hsl(var(--secondary))] rounded-full flex items-center justify-center">
-                  <span className="text-sm font-medium text-[hsl(var(--foreground))]">
+                <div className="h-8 w-8 cosmic-gradient rounded-full flex items-center justify-center shadow-lg">
+                  <span className="text-sm font-medium text-white">
                     {profile ? `${profile.first_name[0]}${profile.last_name[0]}` : 'U'}
                   </span>
                 </div>
                 <div className="hidden sm:block text-left">
-                  <p className="text-sm font-medium text-[hsl(var(--foreground))]">
+                  <p className="text-sm font-medium text-white">
                     {profile ? `${profile.first_name} ${profile.last_name}` : 'User'}
                   </p>
-                  <p className="text-xs text-muted-foreground capitalize">
+                  <p className="text-xs text-gray-400 capitalize">
                     {profile?.role?.replace('_', ' ') || 'User'}
                   </p>
                 </div>
-                <ChevronDown className="h-4 w-4 text-gray-400" />
+                <ChevronDown className="h-4 w-4 text-gray-300" />
               </button>
 
               {isUserMenuOpen && (
-                <div id="user-menu" role="menu" className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-[hsl(var(--border))] z-50">
+                <div id="user-menu" role="menu" className="absolute right-0 mt-2 w-48 glass-effect rounded-md shadow-lg border border-[hsl(var(--border))] z-50">
                   <div className="py-1">
                     <Button asChild variant="ghost" className="w-full justify-start">
                       <Link href="/settings">
@@ -145,7 +145,7 @@ export function Header({ onMenuToggle, isMenuOpen }: HeaderProps) {
                     </Button>
                     <button
                       onClick={handleSignOut}
-                      className="flex items-center w-full px-4 py-2 text-sm text-[hsl(var(--foreground))] hover:bg-[hsl(var(--accent))]"
+                      className="flex items-center w-full px-4 py-2 text-sm text-white hover:bg-[hsl(var(--accent))] transition-all duration-200"
                     >
                       <LogOut className="h-4 w-4 mr-3" />
                       Sign out

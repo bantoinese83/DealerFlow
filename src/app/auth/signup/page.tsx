@@ -2,6 +2,8 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
+import { ArrowLeft } from 'lucide-react'
 import { createClientComponentClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
@@ -89,13 +91,27 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
+    <div className="min-h-screen flex items-center justify-center bg-[hsl(var(--background))] py-12 px-4 sm:px-6 lg:px-8 relative">
+      <div className="max-w-md w-full space-y-8 relative z-10">
         <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+          <Link
+            href="/"
+            className="inline-flex items-center text-gray-300 hover:text-white transition-all duration-200"
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back
+          </Link>
+        </div>
+        <div>
+          <div className="flex justify-center mb-6">
+            <div className="h-12 w-12 cosmic-gradient rounded-lg flex items-center justify-center shadow-lg">
+              <span className="text-white font-bold text-lg">DF</span>
+            </div>
+          </div>
+          <h2 className="mt-6 text-center text-3xl font-extrabold text-white">
             Create your account
           </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
+          <p className="mt-2 text-center text-sm text-gray-300">
             Join DealerFlow AI and transform your BDC operations
           </p>
         </div>
@@ -103,14 +119,14 @@ export default function SignupPage() {
         <Card className="p-8">
           <form className="space-y-6" onSubmit={handleSignup}>
             {error && (
-              <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-md text-sm">
+              <div className="bg-red-500/20 border border-red-500/30 text-red-400 px-4 py-3 rounded-md text-sm">
                 {error}
               </div>
             )}
             
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="firstName" className="block text-sm font-medium text-white">
                   First name
                 </label>
                 <Input
@@ -125,7 +141,7 @@ export default function SignupPage() {
                 />
               </div>
               <div>
-                <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="lastName" className="block text-sm font-medium text-white">
                   Last name
                 </label>
                 <Input
@@ -142,7 +158,7 @@ export default function SignupPage() {
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="email" className="block text-sm font-medium text-white">
                 Email address
               </label>
               <Input
@@ -159,7 +175,7 @@ export default function SignupPage() {
             </div>
 
             <div>
-              <label htmlFor="role" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="role" className="block text-sm font-medium text-white">
                 Role
               </label>
               <select
@@ -167,7 +183,7 @@ export default function SignupPage() {
                 name="role"
                 value={formData.role}
                 onChange={handleInputChange}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                className="mt-1 block w-full px-3 py-2 border border-[hsl(var(--border))] bg-[hsl(var(--input))] text-white rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[hsl(var(--cosmic-purple))] focus:border-transparent"
               >
                 <option value="bdc_rep">BDC Representative</option>
                 <option value="manager">Manager</option>
@@ -176,7 +192,7 @@ export default function SignupPage() {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="password" className="block text-sm font-medium text-white">
                 Password
               </label>
               <Input
@@ -193,7 +209,7 @@ export default function SignupPage() {
             </div>
 
             <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="confirmPassword" className="block text-sm font-medium text-white">
                 Confirm password
               </label>
               <Input
@@ -213,7 +229,7 @@ export default function SignupPage() {
               <Button
                 type="submit"
                 disabled={loading}
-                className="w-full"
+                className="w-full cosmic-gradient"
               >
                 {loading ? 'Creating account...' : 'Create account'}
               </Button>

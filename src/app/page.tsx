@@ -5,39 +5,42 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-[hsl(var(--background))]">
+    <div className="min-h-screen bg-[hsl(var(--background))] relative">
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60 border-b border-[hsl(var(--border))]">
+      <header className="glass-effect border-b border-[hsl(var(--border))]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
             <div className="flex items-center">
-              <h1 className="text-2xl font-semibold text-[hsl(var(--foreground))] tracking-tight">DealerFlow AI</h1>
+              <div className="h-8 w-8 cosmic-gradient rounded-lg flex items-center justify-center shadow-lg mr-3">
+                <span className="text-white font-bold text-sm">DF</span>
+              </div>
+              <h1 className="text-2xl font-semibold text-white tracking-tight">DealerFlow AI</h1>
             </div>
             <div className="flex items-center space-x-3">
-              <Button asChild variant="ghost" className="btn-ghost">
-              <Link href="/auth/login">Sign In</Link>
-            </Button>
-              <Button asChild className="btn-primary">
-              <Link href="/auth/signup">Get Started</Link>
-            </Button>
+              <Button asChild variant="outline">
+                <Link href="/auth/login">Sign In</Link>
+              </Button>
+              <Button asChild className="cosmic-gradient">
+                <Link href="/auth/signup">Get Started</Link>
+              </Button>
             </div>
           </div>
         </div>
       </header>
 
       {/* Hero Section */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 relative z-10">
         <div className="text-center">
-          <h1 className="text-4xl md:text-5xl font-semibold text-[hsl(var(--foreground))] tracking-tight mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold text-white tracking-tight mb-4">
             Transform Your BDC with
-            <span className="text-[hsl(var(--primary))]"> AI-Powered Automation</span>
+            <span className="cosmic-gradient bg-clip-text text-transparent"> AI-Powered Automation</span>
           </h1>
-          <p className="text-lg text-muted-foreground mb-8 max-w-3xl mx-auto">
+          <p className="text-lg text-gray-300 mb-8 max-w-3xl mx-auto">
             DealerFlow AI revolutionizes your dealership&apos;s Business Development Center with intelligent lead follow-up, 
             real-time vehicle data scraping, and seamless CRM integration.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Button asChild size="lg" className="btn-primary text-lg px-8 py-3">
+            <Button asChild size="lg" className="cosmic-gradient text-lg px-8 py-3">
               <Link href="/auth/signup">Start Free Trial</Link>
             </Button>
             <Button asChild variant="outline" size="lg" className="text-lg px-8 py-3">
@@ -153,13 +156,13 @@ export default function HomePage() {
 
         {/* CTA Section */}
         <div className="mt-20 text-center">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">
+          <h2 className="text-3xl font-bold text-white mb-4">
             Ready to Transform Your BDC?
           </h2>
-          <p className="text-lg text-gray-600 mb-8">
+          <p className="text-lg text-gray-300 mb-8">
             Join hundreds of dealerships already using DealerFlow AI to increase lead conversion by 40%
           </p>
-          <Button asChild size="lg" className="text-lg px-8 py-3">
+          <Button asChild size="lg" className="cosmic-gradient text-lg px-8 py-3">
             <Link href="/auth/signup">Get Started Today</Link>
           </Button>
         </div>

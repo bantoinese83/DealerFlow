@@ -53,17 +53,17 @@ export function LeadStatsWidget({
   const getStatusColor = (status: Lead['status']) => {
     switch (status) {
       case 'new':
-        return 'text-blue-600 bg-blue-100'
+        return 'text-[hsl(var(--cosmic-blue))] bg-blue-500/20'
       case 'contacted':
-        return 'text-yellow-600 bg-yellow-100'
+        return 'text-[hsl(var(--cosmic-orange))] bg-orange-500/20'
       case 'qualified':
-        return 'text-green-600 bg-green-100'
+        return 'text-[hsl(var(--cosmic-green))] bg-green-500/20'
       case 'disqualified':
-        return 'text-red-600 bg-red-100'
+        return 'text-red-400 bg-red-500/20'
       case 'closed':
-        return 'text-gray-600 bg-gray-100'
+        return 'text-gray-400 bg-gray-500/20'
       default:
-        return 'text-gray-600 bg-gray-100'
+        return 'text-gray-400 bg-gray-500/20'
     }
   }
 
@@ -91,9 +91,9 @@ export function LeadStatsWidget({
   }
 
   const getTrendColor = (trend: number) => {
-    if (trend > 0) return 'text-green-600'
-    if (trend < 0) return 'text-red-600'
-    return 'text-gray-600'
+    if (trend > 0) return 'text-[hsl(var(--cosmic-green))]'
+    if (trend < 0) return 'text-red-400'
+    return 'text-gray-400'
   }
 
   const formatPercentage = (value: number) => {
@@ -127,8 +127,8 @@ export function LeadStatsWidget({
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h3 className="text-lg font-semibold text-gray-900">Lead Statistics</h3>
-          <p className="text-sm text-gray-600">Overview of your lead pipeline</p>
+          <h3 className="text-lg font-semibold text-white">Lead Statistics</h3>
+          <p className="text-sm text-gray-300">Overview of your lead pipeline</p>
         </div>
         <div className="flex items-center space-x-2">
           <Button
@@ -156,21 +156,21 @@ export function LeadStatsWidget({
       ) : stats ? (
         <div className="space-y-6">
           {/* Total Leads */}
-          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-lg">
+          <div className="cosmic-gradient p-4 rounded-lg">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Total Leads</p>
-                <p className="text-3xl font-bold text-gray-900">{stats.total}</p>
+                <p className="text-sm font-medium text-white/80">Total Leads</p>
+                <p className="text-3xl font-bold text-white">{stats.total}</p>
                 <div className="flex items-center mt-1">
                   {getTrendIcon(stats.trend.total)}
                   <span className={cn("text-sm font-medium ml-1", getTrendColor(stats.trend.total))}>
                     {formatPercentage(stats.trend.total)}
                   </span>
-                  <span className="text-sm text-gray-500 ml-1">vs last period</span>
+                  <span className="text-sm text-white/60 ml-1">vs last period</span>
                 </div>
               </div>
-              <div className="h-12 w-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                <Users className="h-6 w-6 text-blue-600" />
+              <div className="h-12 w-12 bg-white/20 rounded-lg flex items-center justify-center">
+                <Users className="h-6 w-6 text-white" />
               </div>
             </div>
           </div>
@@ -185,7 +185,7 @@ export function LeadStatsWidget({
             ].map(({ status, label, value }) => (
               <div
                 key={status}
-                className="p-4 rounded-lg border border-gray-200 hover:bg-gray-50 cursor-pointer transition-colors"
+                className="p-4 rounded-lg border border-[hsl(var(--border))] hover:bg-[hsl(var(--accent))] cursor-pointer transition-all duration-200 glass-effect"
                 onClick={() => onViewLeads?.(status)}
               >
                 <div className="flex items-center justify-between mb-2">
@@ -198,8 +198,8 @@ export function LeadStatsWidget({
                   </div>
                   <ArrowUpRight className="h-4 w-4 text-gray-400" />
                 </div>
-                <p className="text-2xl font-bold text-gray-900">{value}</p>
-                <p className="text-xs text-gray-500">
+                <p className="text-2xl font-bold text-white">{value}</p>
+                <p className="text-xs text-gray-400">
                   {stats.total > 0 ? Math.round((value / stats.total) * 100) : 0}% of total
                 </p>
               </div>
@@ -208,11 +208,11 @@ export function LeadStatsWidget({
 
           {/* Key Metrics */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="p-4 bg-green-50 rounded-lg">
+            <div className="p-4 bg-green-500/20 rounded-lg border border-green-500/30">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Conversion Rate</p>
-                  <p className="text-2xl font-bold text-gray-900">{stats.conversionRate.toFixed(1)}%</p>
+                  <p className="text-sm font-medium text-gray-300">Conversion Rate</p>
+                  <p className="text-2xl font-bold text-white">{stats.conversionRate.toFixed(1)}%</p>
                   <div className="flex items-center mt-1">
                     {getTrendIcon(stats.trend.conversionRate)}
                     <span className={cn("text-sm font-medium ml-1", getTrendColor(stats.trend.conversionRate))}>
@@ -220,15 +220,15 @@ export function LeadStatsWidget({
                     </span>
                   </div>
                 </div>
-                <TrendingUp className="h-8 w-8 text-green-600" />
+                <TrendingUp className="h-8 w-8 text-[hsl(var(--cosmic-green))]" />
               </div>
             </div>
 
-            <div className="p-4 bg-yellow-50 rounded-lg">
+            <div className="p-4 bg-orange-500/20 rounded-lg border border-orange-500/30">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Avg Response Time</p>
-                  <p className="text-2xl font-bold text-gray-900">{formatTime(stats.avgResponseTime)}</p>
+                  <p className="text-sm font-medium text-gray-300">Avg Response Time</p>
+                  <p className="text-2xl font-bold text-white">{formatTime(stats.avgResponseTime)}</p>
                   <div className="flex items-center mt-1">
                     {getTrendIcon(-stats.trend.responseTime)}
                     <span className={cn("text-sm font-medium ml-1", getTrendColor(-stats.trend.responseTime))}>
@@ -236,15 +236,15 @@ export function LeadStatsWidget({
                     </span>
                   </div>
                 </div>
-                <Clock className="h-8 w-8 text-yellow-600" />
+                <Clock className="h-8 w-8 text-[hsl(var(--cosmic-orange))]" />
               </div>
             </div>
           </div>
 
           {/* Quick Actions */}
-          <div className="pt-4 border-t border-gray-200">
+          <div className="pt-4 border-t border-[hsl(var(--border))]">
             <div className="flex items-center justify-between">
-              <p className="text-sm text-gray-600">Quick Actions</p>
+              <p className="text-sm text-gray-300">Quick Actions</p>
               <div className="flex space-x-2">
                 <Button
                   size="sm"
@@ -267,8 +267,8 @@ export function LeadStatsWidget({
       ) : (
         <div className="text-center py-8">
           <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">No data available</h3>
-          <p className="text-gray-600">Lead statistics will appear here once you have leads.</p>
+          <h3 className="text-lg font-medium text-white mb-2">No data available</h3>
+          <p className="text-gray-300">Lead statistics will appear here once you have leads.</p>
         </div>
       )}
     </Card>

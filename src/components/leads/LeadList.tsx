@@ -98,8 +98,8 @@ export function LeadList({
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Leads</h2>
-          <p className="text-gray-600">
+          <h2 className="text-2xl font-bold text-white">Leads</h2>
+          <p className="text-gray-300">
             {filteredLeads.length} of {leads.length} leads
           </p>
         </div>
@@ -110,7 +110,7 @@ export function LeadList({
               <Download className="h-4 w-4 mr-2" />
               Export
             </Button>
-            <Button size="sm">
+            <Button size="sm" className="cosmic-gradient">
               <Plus className="h-4 w-4 mr-2" />
               New Lead
             </Button>
@@ -120,7 +120,7 @@ export function LeadList({
 
       {/* Filters and Search */}
       {showFilters && (
-        <div className="bg-white p-4 rounded-lg border border-gray-200 space-y-4">
+        <div className="glass-effect p-4 rounded-lg border border-[hsl(var(--border))] space-y-4">
           <div className="flex flex-col sm:flex-row gap-4">
             {/* Search */}
             <div className="flex-1">
@@ -140,7 +140,7 @@ export function LeadList({
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-[hsl(var(--border))] bg-[hsl(var(--input))] text-white rounded-md focus:outline-none focus:ring-2 focus:ring-[hsl(var(--cosmic-purple))] focus:border-transparent"
               >
                 {statusOptions.map(option => (
                   <option key={option.value} value={option.value}>
@@ -159,7 +159,7 @@ export function LeadList({
                   setSortBy(field as typeof sortBy)
                   setSortOrder(order as typeof sortOrder)
                 }}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-[hsl(var(--border))] bg-[hsl(var(--input))] text-white rounded-md focus:outline-none focus:ring-2 focus:ring-[hsl(var(--cosmic-purple))] focus:border-transparent"
               >
                 <option value="created_at-desc">Newest First</option>
                 <option value="created_at-asc">Oldest First</option>
@@ -176,10 +176,10 @@ export function LeadList({
               <button
                 onClick={() => setViewMode('grid')}
                 className={cn(
-                  "p-2 rounded-md",
+                  "p-2 rounded-md transition-all duration-200",
                   viewMode === 'grid' 
-                    ? "bg-blue-100 text-blue-600" 
-                    : "text-gray-400 hover:text-gray-600"
+                    ? "bg-[hsl(var(--accent))] text-white" 
+                    : "text-gray-400 hover:text-white hover:bg-[hsl(var(--accent))]"
                 )}
               >
                 <Grid className="h-4 w-4" />
@@ -187,10 +187,10 @@ export function LeadList({
               <button
                 onClick={() => setViewMode('list')}
                 className={cn(
-                  "p-2 rounded-md",
+                  "p-2 rounded-md transition-all duration-200",
                   viewMode === 'list' 
-                    ? "bg-blue-100 text-blue-600" 
-                    : "text-gray-400 hover:text-gray-600"
+                    ? "bg-[hsl(var(--accent))] text-white" 
+                    : "text-gray-400 hover:text-white hover:bg-[hsl(var(--accent))]"
                 )}
               >
                 <List className="h-4 w-4" />
@@ -226,8 +226,8 @@ export function LeadList({
         <div className="text-center py-12">
           <div className="text-gray-400 mb-4">
             <Search className="h-12 w-12 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No leads found</h3>
-            <p className="text-gray-600">
+            <h3 className="text-lg font-medium text-white mb-2">No leads found</h3>
+            <p className="text-gray-300">
               {searchTerm || statusFilter !== 'all' 
                 ? 'Try adjusting your search or filter criteria.'
                 : 'Get started by creating your first lead.'
@@ -235,7 +235,7 @@ export function LeadList({
             </p>
           </div>
           {showActions && (
-            <Button>
+            <Button className="cosmic-gradient">
               <Plus className="h-4 w-4 mr-2" />
               Create Lead
             </Button>

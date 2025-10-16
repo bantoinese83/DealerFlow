@@ -53,26 +53,26 @@ export function AlertNotification({
   const getAlertColor = (type: Alert['type']) => {
     switch (type) {
       case 'critical':
-        return 'text-red-600 bg-red-50 border-red-200'
+        return 'text-red-400 bg-red-500/20 border-red-500/30'
       case 'warning':
-        return 'text-yellow-600 bg-yellow-50 border-yellow-200'
+        return 'text-[hsl(var(--cosmic-orange))] bg-orange-500/20 border-orange-500/30'
       case 'info':
-        return 'text-blue-600 bg-blue-50 border-blue-200'
+        return 'text-[hsl(var(--cosmic-blue))] bg-blue-500/20 border-blue-500/30'
       default:
-        return 'text-gray-600 bg-gray-50 border-gray-200'
+        return 'text-gray-400 bg-gray-500/20 border-gray-500/30'
     }
   }
 
   const getAlertIconColor = (type: Alert['type']) => {
     switch (type) {
       case 'critical':
-        return 'text-red-600'
+        return 'text-red-400'
       case 'warning':
-        return 'text-yellow-600'
+        return 'text-[hsl(var(--cosmic-orange))]'
       case 'info':
-        return 'text-blue-600'
+        return 'text-[hsl(var(--cosmic-blue))]'
       default:
-        return 'text-gray-600'
+        return 'text-gray-400'
     }
   }
 
@@ -126,17 +126,17 @@ export function AlertNotification({
         </div>
         
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium text-gray-900 line-clamp-1">
+          <p className="text-sm font-medium text-white line-clamp-1">
             {alert.message}
           </p>
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-gray-300">
             {formatTime(alert.triggered_at)}
           </p>
         </div>
 
         <div className="flex items-center space-x-1">
           {!alert.is_read && (
-            <div className="h-2 w-2 bg-blue-500 rounded-full"></div>
+            <div className="h-2 w-2 bg-[hsl(var(--cosmic-purple))] rounded-full"></div>
           )}
           <Button
             size="sm"
@@ -157,7 +157,7 @@ export function AlertNotification({
   return (
     <Card className={cn(
       "p-4 transition-all",
-      !alert.is_read && "ring-2 ring-blue-500 ring-opacity-50 bg-blue-50/30",
+      !alert.is_read && "ring-2 ring-[hsl(var(--cosmic-purple))] ring-opacity-50 bg-purple-500/10",
       className
     )}>
       <div className="flex items-start space-x-3">
@@ -177,17 +177,17 @@ export function AlertNotification({
                   <span className="ml-1 capitalize">{alert.type}</span>
                 </span>
                 {!alert.is_read && (
-                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-[hsl(var(--cosmic-purple))]/20 text-[hsl(var(--cosmic-purple))] border border-[hsl(var(--cosmic-purple))]/30">
                     New
                   </span>
                 )}
               </div>
 
-              <p className="text-sm text-gray-900 mb-2">
+              <p className="text-sm text-white mb-2">
                 {alert.message}
               </p>
 
-              <div className="flex items-center space-x-4 text-xs text-gray-500">
+              <div className="flex items-center space-x-4 text-xs text-gray-300">
                 <div className="flex items-center space-x-1">
                   <Clock className="h-3 w-3" />
                   <span>{formatTime(alert.triggered_at)}</span>

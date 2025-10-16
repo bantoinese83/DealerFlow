@@ -61,23 +61,23 @@ export function Sidebar({ isOpen = true, onClose }: SidebarProps) {
 
       {/* Sidebar */}
       <div className={cn(
-        "fixed inset-y-0 left-0 z-50 w-64 bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60 border-r border-[hsl(var(--border))] shadow-sm transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0",
+        "fixed inset-y-0 left-0 z-50 w-64 glass-effect border-r border-[hsl(var(--border))] shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0",
         isOpen ? "translate-x-0" : "-translate-x-full"
       )}>
         <div className="flex flex-col h-full">
           {/* Logo */}
           <div className="flex items-center justify-between h-16 px-4 border-b border-[hsl(var(--border))]">
             <Link href="/dashboard" className="flex items-center" aria-label="Go to dashboard">
-              <div className="h-8 w-8 bg-[hsl(var(--primary))] rounded-lg flex items-center justify-center">
-                <span className="text-[hsl(var(--primary-foreground))] font-bold text-sm">DF</span>
+              <div className="h-8 w-8 cosmic-gradient rounded-lg flex items-center justify-center shadow-lg">
+                <span className="text-white font-bold text-sm">DF</span>
               </div>
-              <span className="ml-2 text-xl font-bold text-[hsl(var(--foreground))]">
+              <span className="ml-2 text-xl font-bold text-white">
                 {siteConfig.name}
               </span>
             </Link>
             <button
               onClick={onClose || toggleSidebar}
-              className="lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-600 hover:bg-[hsl(var(--accent))]"
+              className="lg:hidden p-2 rounded-md text-gray-300 hover:text-white hover:bg-[hsl(var(--accent))] transition-all duration-200"
             >
               <X className="h-5 w-5" />
             </button>
@@ -93,18 +93,18 @@ export function Sidebar({ isOpen = true, onClose }: SidebarProps) {
                     key={item.name}
                     href={item.href}
                     className={cn(
-                      "group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors",
+                      "group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-all duration-200",
                       isActive(item.href)
-                        ? "bg-[hsl(var(--accent))] text-[hsl(var(--foreground))] ring-1 ring-[hsl(var(--border))]"
-                        : "text-muted-foreground hover:bg-[hsl(var(--accent))] hover:text-[hsl(var(--foreground))]"
+                        ? "bg-[hsl(var(--accent))] text-white ring-1 ring-[hsl(var(--cosmic-purple))] shadow-lg"
+                        : "text-gray-300 hover:bg-[hsl(var(--accent))] hover:text-white"
                     )}
                   >
                     <Icon
                       className={cn(
                         "mr-3 h-5 w-5 flex-shrink-0",
                         isActive(item.href)
-                          ? "text-[hsl(var(--primary))]"
-                          : "text-muted-foreground group-hover:text-[hsl(var(--foreground))]"
+                          ? "text-[hsl(var(--cosmic-purple))]"
+                          : "text-gray-400 group-hover:text-white"
                       )}
                     />
                     {item.name}
@@ -116,7 +116,7 @@ export function Sidebar({ isOpen = true, onClose }: SidebarProps) {
             {/* Settings section */}
             <div className="pt-6">
               <div className="px-3 mb-3">
-                <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
                   Settings
                 </h3>
               </div>
@@ -128,18 +128,18 @@ export function Sidebar({ isOpen = true, onClose }: SidebarProps) {
                       key={item.name}
                       href={item.href}
                       className={cn(
-                        "group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors",
+                        "group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-all duration-200",
                         isActive(item.href)
-                          ? "bg-[hsl(var(--accent))] text-[hsl(var(--foreground))] ring-1 ring-[hsl(var(--border))]"
-                          : "text-muted-foreground hover:bg-[hsl(var(--accent))] hover:text-[hsl(var(--foreground))]"
+                          ? "bg-[hsl(var(--accent))] text-white ring-1 ring-[hsl(var(--cosmic-purple))] shadow-lg"
+                          : "text-gray-300 hover:bg-[hsl(var(--accent))] hover:text-white"
                       )}
                     >
                       <Icon
                         className={cn(
                           "mr-3 h-5 w-5 flex-shrink-0",
                           isActive(item.href)
-                            ? "text-[hsl(var(--primary))]"
-                            : "text-muted-foreground group-hover:text-[hsl(var(--foreground))]"
+                            ? "text-[hsl(var(--cosmic-purple))]"
+                            : "text-gray-400 group-hover:text-white"
                         )}
                       />
                       {item.name}
@@ -153,16 +153,16 @@ export function Sidebar({ isOpen = true, onClose }: SidebarProps) {
           {/* User info */}
           <div className="border-t border-[hsl(var(--border))] p-4">
             <div className="flex items-center">
-              <div className="h-10 w-10 bg-[hsl(var(--secondary))] rounded-full flex items-center justify-center">
-                <span className="text-sm font-medium text-[hsl(var(--foreground))]">
+              <div className="h-10 w-10 cosmic-gradient rounded-full flex items-center justify-center shadow-lg">
+                <span className="text-sm font-medium text-white">
                   {profile ? `${profile.first_name[0]}${profile.last_name[0]}` : 'U'}
                 </span>
               </div>
               <div className="ml-3">
-                <p className="text-sm font-medium text-[hsl(var(--foreground))]">
+                <p className="text-sm font-medium text-white">
                   {profile ? `${profile.first_name} ${profile.last_name}` : 'User'}
                 </p>
-                <p className="text-xs text-muted-foreground capitalize">
+                <p className="text-xs text-gray-400 capitalize">
                   {profile?.role?.replace('_', ' ') || 'User'}
                 </p>
               </div>

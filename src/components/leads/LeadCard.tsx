@@ -33,17 +33,17 @@ export function LeadCard({ lead, onUpdate, onDelete }: LeadCardProps) {
   const getStatusColor = (status: Lead['status']) => {
     switch (status) {
       case 'new':
-        return 'bg-blue-100 text-blue-800'
+        return 'text-[hsl(var(--cosmic-blue))] bg-blue-500/20 border border-blue-500/30'
       case 'contacted':
-        return 'bg-yellow-100 text-yellow-800'
+        return 'text-[hsl(var(--cosmic-orange))] bg-orange-500/20 border border-orange-500/30'
       case 'qualified':
-        return 'bg-green-100 text-green-800'
+        return 'text-[hsl(var(--cosmic-green))] bg-green-500/20 border border-green-500/30'
       case 'disqualified':
-        return 'bg-red-100 text-red-800'
+        return 'text-red-400 bg-red-500/20 border border-red-500/30'
       case 'closed':
-        return 'bg-gray-100 text-gray-800'
+        return 'text-gray-400 bg-gray-500/20 border border-gray-500/30'
       default:
-        return 'bg-gray-100 text-gray-800'
+        return 'text-gray-400 bg-gray-500/20 border border-gray-500/30'
     }
   }
 
@@ -95,38 +95,38 @@ export function LeadCard({ lead, onUpdate, onDelete }: LeadCardProps) {
   }
 
   return (
-    <Card className="p-6 hover:shadow-md transition-shadow">
+    <Card className="p-6 hover:shadow-lg transition-all duration-200">
       <div className="flex items-start justify-between">
         <div className="flex-1">
           <div className="flex items-center space-x-3 mb-3">
-            <div className="h-10 w-10 bg-gray-300 rounded-full flex items-center justify-center">
-              <User className="h-5 w-5 text-gray-600" />
+            <div className="h-10 w-10 cosmic-gradient rounded-full flex items-center justify-center shadow-lg">
+              <User className="h-5 w-5 text-white" />
             </div>
             <div>
-              <h3 className="text-lg font-medium text-gray-900">
+              <h3 className="text-lg font-medium text-white">
                 {lead.first_name} {lead.last_name}
               </h3>
-              <p className="text-sm text-gray-500">{lead.source}</p>
+              <p className="text-sm text-gray-300">{lead.source}</p>
             </div>
           </div>
 
           <div className="space-y-2 mb-4">
-            <div className="flex items-center text-sm text-gray-600">
+            <div className="flex items-center text-sm text-gray-300">
               <Mail className="h-4 w-4 mr-2" />
-              <a href={`mailto:${lead.email}`} className="hover:text-blue-600">
+              <a href={`mailto:${lead.email}`} className="hover:text-[hsl(var(--cosmic-purple))] transition-colors">
                 {lead.email}
               </a>
             </div>
             {lead.phone && (
-              <div className="flex items-center text-sm text-gray-600">
+              <div className="flex items-center text-sm text-gray-300">
                 <Phone className="h-4 w-4 mr-2" />
-                <a href={`tel:${lead.phone}`} className="hover:text-blue-600">
+                <a href={`tel:${lead.phone}`} className="hover:text-[hsl(var(--cosmic-purple))] transition-colors">
                   {lead.phone}
                 </a>
               </div>
             )}
             {lead.last_contacted_at && (
-              <div className="flex items-center text-sm text-gray-600">
+              <div className="flex items-center text-sm text-gray-300">
                 <Calendar className="h-4 w-4 mr-2" />
                 Last contacted: {formatDate(lead.last_contacted_at)}
               </div>
@@ -134,7 +134,7 @@ export function LeadCard({ lead, onUpdate, onDelete }: LeadCardProps) {
           </div>
 
           {lead.notes && (
-            <p className="text-sm text-gray-600 mb-4 line-clamp-2">
+            <p className="text-sm text-gray-300 mb-4 line-clamp-2">
               {lead.notes}
             </p>
           )}
@@ -172,10 +172,10 @@ export function LeadCard({ lead, onUpdate, onDelete }: LeadCardProps) {
                 </Button>
 
                 {isMenuOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-gray-200 z-10">
+                  <div className="absolute right-0 mt-2 w-48 glass-effect rounded-md shadow-lg border border-[hsl(var(--border))] z-10">
                     <div className="py-1">
                       <Link href={`/leads/${lead.id}`}>
-                        <button className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                        <button className="block w-full text-left px-4 py-2 text-sm text-white hover:bg-[hsl(var(--accent))] transition-all duration-200">
                           View Details
                         </button>
                       </Link>
@@ -183,7 +183,7 @@ export function LeadCard({ lead, onUpdate, onDelete }: LeadCardProps) {
                       {lead.status !== 'contacted' && (
                         <button
                           onClick={() => handleStatusChange('contacted')}
-                          className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                          className="block w-full text-left px-4 py-2 text-sm text-white hover:bg-[hsl(var(--accent))] transition-all duration-200"
                         >
                           Mark as Contacted
                         </button>
@@ -192,7 +192,7 @@ export function LeadCard({ lead, onUpdate, onDelete }: LeadCardProps) {
                       {lead.status !== 'qualified' && (
                         <button
                           onClick={() => handleStatusChange('qualified')}
-                          className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                          className="block w-full text-left px-4 py-2 text-sm text-white hover:bg-[hsl(var(--accent))] transition-all duration-200"
                         >
                           Mark as Qualified
                         </button>
@@ -201,7 +201,7 @@ export function LeadCard({ lead, onUpdate, onDelete }: LeadCardProps) {
                       {lead.status !== 'disqualified' && (
                         <button
                           onClick={() => handleStatusChange('disqualified')}
-                          className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                          className="block w-full text-left px-4 py-2 text-sm text-white hover:bg-[hsl(var(--accent))] transition-all duration-200"
                         >
                           Mark as Disqualified
                         </button>
@@ -209,7 +209,7 @@ export function LeadCard({ lead, onUpdate, onDelete }: LeadCardProps) {
                       
                       <button
                         onClick={() => onDelete?.(lead.id)}
-                        className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
+                        className="block w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-red-500/20 transition-all duration-200"
                       >
                         Delete Lead
                       </button>
