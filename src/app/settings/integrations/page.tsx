@@ -5,6 +5,7 @@ import { CRMIntegrationSettings } from '@/components/integrations/CRMIntegration
 import { useAuth } from '@/common/hooks/useAuth'
 import { Card } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
+import { cn } from '@/common/utils'
 import { 
   Settings, 
   Database, 
@@ -344,6 +345,3 @@ export default function IntegrationsSettingsPage() {
     </div>
   )
 }
-
-// Import cn utility
-import { cn } from '@/common/utils'

@@ -5,6 +5,7 @@ import { AlertList } from '@/components/alerts/AlertList'
 import { useAuth } from '@/common/hooks/useAuth'
 import { Card } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
+import { cn } from '@/common/utils'
 import { 
   Bell, 
   Filter, 
@@ -206,6 +207,3 @@ export default function AlertsPage() {
     </div>
   )
 }
-
-// Import cn utility
-import { cn } from '@/common/utils'

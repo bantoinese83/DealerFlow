@@ -5,6 +5,7 @@ import { AIConfigForm } from '@/components/ai/AIConfigForm'
 import { useAuth } from '@/common/hooks/useAuth'
 import { Card } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
+import { cn } from '@/common/utils'
 import { 
   Bot, 
   Settings, 
@@ -215,6 +216,3 @@ export default function AISettingsPage() {
     </div>
   )
 }
-
-// Import cn utility
-import { cn } from '@/common/utils'
