@@ -1,26 +1,47 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: 210 20% 98%;
+    --foreground: 215 25% 15%;
+    --card: 0 0% 100%;
+    --card-foreground: 215 25% 15%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 215 25% 15%;
+    --primary: 221 83% 53%; /* corporate blue */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 215 16% 90%;
+    --secondary-foreground: 215 25% 20%;
+    --muted: 215 16% 92%;
+    --muted-foreground: 215 16% 40%;
+    --accent: 221 83% 96%;
+    --accent-foreground: 221 83% 30%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 215 16% 85%;
+    --input: 215 16% 90%;
+    --ring: 221 83% 53%;
+    --radius: 8px;
+  }
+
+  html, body {
+    @apply bg-[hsl(var(--background))] text-[hsl(var(--foreground))] antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply tracking-tight;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  .card {
+    @apply bg-[hsl(var(--card))] text-[hsl(var(--card-foreground))] border border-[hsl(var(--border))] shadow-sm rounded-lg;
+  }
+  .btn-primary {
+    @apply bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))] hover:brightness-95 disabled:opacity-50 font-medium rounded-md;
+  }
+  .btn-ghost {
+    @apply hover:bg-[hsl(var(--accent))] text-[hsl(var(--foreground))];
+  }
 }
+

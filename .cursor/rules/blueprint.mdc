@@ -1,0 +1,753 @@
+---
+alwaysApply: true
+---
+DealerFlow AI
+
+```tree
+├── .env.local
+├── .eslintrc.json
+├── .gitignore
+├── .prettierrc
+├── Dockerfile
+├── docker-compose.yml
+├── .github/
+│   └── workflows/
+│       └── ci.yml
+├── next.config.mjs
+├── package.json
+├── README.md
+├── tsconfig.json
+├── vitest.config.ts
+├── postcss.config.js
+├── tailwind.config.js
+├── public/
+│   ├── favicon.ico
+│   └── images/
+├── migrations/                           # Supabase SQL migration files
+├── db/
+│   ├── schema.sql                        # Initial database schema
+│   ├── seed.sql                          # Seed data for development
+│   └── functions/                        # Supabase Edge Functions source
+│       ├── llm-proxy.ts                  # LLM integration proxy
+│       └── web-scraper.ts                # Web scraping module
+├── infra/
+│   └── supabase/
+│       ├── config.toml                   # Supabase CLI config
+│       └── functions/                    # Edge functions deployment config
+├── docs/
+│   ├── ARCHITECTURE.md
+│   └── openapi.yaml
+├── src/
+│   ├── app/
+│   │   ├── layout.tsx
+│   │   ├── page.tsx
+│   │   ├── loading.tsx
+│   │   ├── api/
+│   │   │   ├── leads/route.ts            # Lead CRUD API
+│   │   │   ├── vehicles/route.ts         # Vehicle CRUD/scrape trigger API
+│   │   │   ├── conversations/route.ts    # AI conversation API
+│   │   │   ├── integrations/route.ts     # CRM integration settings API
+│   │   │   └── ai-configs/route.ts       # AI model configuration API
+│   │   ├── auth/
+│   │   │   ├── login/page.tsx
+│   │   │   └── signup/page.tsx
+│   │   ├── dashboard/
+│   │   │   ├── layout.tsx
+│   │   │   └── page.tsx
+│   │   ├── leads/
+│   │   │   ├── page.tsx                  # Lead list
+│   │   │   └── [id]/page.tsx             # Lead detail & conversation view
+│   │   ├── inventory/
+│   │   │   ├── page.tsx                  # Scraped vehicle inventory view
+│   │   │   └── [id]/page.tsx
+│   │   ├── settings/
+│   │   │   ├── ai/page.tsx               # AI configuration page
+│   │   │   └── integrations/page.tsx     # CRM integration settings page
+│   │   └── alerts/page.tsx               # Real-time alerts page
+│   ├── components/
+│   │   ├── ui/
+│   │   │   ├── Button.tsx
+│   │   │   ├── Input.tsx
+│   │   │   ├── Card.tsx
+│   │   │   ├── Table.tsx
+│   │   │   ├── AlertDialog.tsx
+│   │   │   └── Spinner.tsx
+│   │   ├── layout/
+│   │   │   ├── Header.tsx
+│   │   │   ├── Sidebar.tsx
+│   │   │   └── Footer.tsx
+│   │   ├── leads/
+│   │   │   ├── LeadList.tsx
+│   │   │   ├── LeadCard.tsx
+│   │   │   ├── LeadDetailView.tsx
+│   │   │   └── LeadForm.tsx
+│   │   ├── inventory/
+│   │   │   ├── VehicleList.tsx
+│   │   │   ├── VehicleCard.tsx
+│   │   │   └── ScrapeConfigForm.tsx
+│   │   ├── ai/
+│   │   │   ├── AIConfigForm.tsx
+│   │   │   ├── ConversationThread.tsx
+│   │   │   └── AIChatInput.tsx
+│   │   ├── integrations/
+│   │   │   └── CRMIntegrationSettings.tsx
+│   │   ├── alerts/
+│   │   │   └── AlertNotification.tsx
+│   │   └── dashboard/
+│   │       ├── LeadStatsWidget.tsx
+│   │       └── RecentActivityFeed.tsx
+│   ├── common/
+│   │   ├── hooks/
+│   │   │   ├── useLeads.ts
+│   │   │   ├── useConversations.ts
+│   │   │   └── useAuth.ts
+│   │   ├── utils/
+│   │   │   ├── api.ts                    # API utility functions
+│   │   │   └── helpers.ts
+│   │   ├── types/                        # Shared TypeScript types for data models
+│   │   ├── constants/                    # Application-wide constants
+│   │   ├── validation/
+│   │   │   ├── leadSchema.ts             # Zod schema for lead validation
+│   │   │   ├── aiConfigSchema.ts
+│   │   │   └── crmIntegrationSchema.ts
+│   │   ├── errors/                       # Custom error classes
+│   │   └── permissions/                  # Role-based permission helpers
+│   ├── config/
+│   │   └── site.ts                       # Application configuration
+│   ├── lib/
+│   │   ├── supabase/                     # Supabase client setup
+│   │   │   └── client.ts
+│   │   ├── auth.ts                       # Auth-related helpers
+│   │   ├── queryClient.ts                # React Query client setup
+│   │   ├── logging.ts                    # Centralized logging setup (e.g., Sentry)
+│   │   └── providers/
+│   │       ├── SupabaseProvider.tsx      # Supabase context provider
+│   │       └── QueryProvider.tsx         # React Query context provider
+│   ├── store/
+│   │   ├── authStore.ts                  # Zustand store for auth state
+│   │   └── notificationStore.ts          # Zustand store for notifications/alerts
+│   ├── models/                           # Domain models / interfaces
+│   │   ├── Lead.ts
+│   │   ├── Vehicle.ts
+│   │   ├── Conversation.ts
+│   │   ├── AIConfig.ts
+│   │   ├── CRMIntegration.ts
+│   │   └── Alert.ts
+│   ├── services/                         # Business logic and API wrappers
+│   │   ├── leadService.ts
+│   │   ├── vehicleService.ts
+│   │   ├── aiService.ts                  # Orchestrates LLM interactions
+│   │   ├── crmService.ts                 # Handles CRM API calls
+│   │   ├── webScrapeService.ts           # Orchestrates web scraping
+│   │   └── notificationService.ts        # Handles alerts and notifications
+│   ├── middleware.ts
+│   └── tests/
+│       ├── setup.ts
+│       ├── mocks/
+│       ├── unit/
+│       │   ├── services/
+│       │   └── components/
+│       ├── integration/
+│       │   └── api/
+│       └── e2e/
+│           └── auth.spec.ts
+```
+
+## Project Overview
+DealerFlow AI is an AI-driven Business Development Center (BDC) automation system specifically designed for automotive dealerships. Its primary purpose is to streamline and enhance lead follow-up processes, dynamically retrieve vehicle information (pricing, availability), and facilitate the creation of new leads within existing CRM systems. The platform leverages advanced LLM/NLP capabilities for conversational follow-ups, integrates with major CRM APIs (CDK, Reynolds&Reynolds), incorporates real-time web scraping for up-to-date vehicle data, and provides instant alerts for BDC managers.
+
+## Architecture Overview
+DealerFlow AI follows a modern, serverless-first architecture optimized for scalability, real-time interactions, and rapid development.
+-   **Frontend (User Interface):** Built with Next.js 14+ (App Router), React 18, and TypeScript, styled with Tailwind CSS. It provides an intuitive, responsive dashboard for BDC reps and managers.
+-   **Backend & Database (BaaS):** Supabase serves as the primary backend, providing:
+    -   **PostgreSQL:** Robust, scalable relational database for all application data.
+    -   **Supabase Auth:** Handles user authentication and authorization (JWTs, RLS).
+    -   **Supabase Storage:** For storing dynamic content like scraped website snapshots or conversation logs.
+    -   **Supabase Realtime:** Powers instant updates for lead status, conversations, and manager alerts.
+    -   **Supabase Edge Functions:** Used for compute-intensive and sensitive operations, including:
+        -   **LLM/NLP Engine Proxy:** Securely interfaces with external LLM providers (e.g., OpenAI, Anthropic).
+        -   **Web Scraping Module:** Executes dynamic web scraping requests for vehicle information.
+        -   **CRM API Integration:** Acts as a secure intermediary for interacting with dealership CRM APIs.
+        -   **Notification Service:** Triggers external notifications (email/SMS).
+-   **Integration:**
+    -   **CRM API:** Direct integration with CDK and Reynolds&Reynolds APIs via Supabase Edge Functions.
+    -   **External LLM Providers:** Integration for conversational AI.
+    -   **Web Scraping Targets:** Various dealership and automotive listing websites.
+-   **Deployment:** Vercel for Next.js frontend, Supabase Platform for the entire backend stack.
+-   **Design Patterns:** Event-driven architecture for real-time updates, API Gateway pattern (Next.js API routes + Supabase Edge Functions), Repository pattern for data access.
+
+## Database Schema
+The PostgreSQL database (Supabase) will store the following key tables:
+
+1.  **`dealerships`**: Stores dealership specific configurations and details.
+    -   `id` UUID (PK)
+    -   `name` TEXT (UNIQUE, NOT NULL)
+    -   `crm_type` TEXT (`CDK`, `Reynolds`, etc.)
+    -   `crm_config_json` JSONB (encrypted CRM API keys, endpoints)
+    -   `created_at` TIMESTAMP WITH TIME ZONE
+    -   `updated_at` TIMESTAMP WITH TIME ZONE
+
+2.  **`profiles`**: User profiles, linked to Supabase Auth `auth.users`.
+    -   `id` UUID (PK, FK to `auth.users.id`)
+    -   `dealership_id` UUID (FK to `dealerships.id`, NOT NULL)
+    -   `first_name` TEXT
+    -   `last_name` TEXT
+    -   `role` TEXT (`admin`, `manager`, `bdc_rep`, NOT NULL)
+    -   `email` TEXT (UNIQUE)
+    -   `avatar_url` TEXT
+    -   `created_at` TIMESTAMP WITH TIME ZONE
+    -   `updated_at` TIMESTAMP WITH TIME ZONE
+
+3.  **`leads`**: Represents sales leads from various sources.
+    -   `id` UUID (PK)
+    -   `dealership_id` UUID (FK to `dealerships.id`, NOT NULL)
+    -   `crm_lead_id` TEXT (nullable, external ID from CRM)
+    -   `first_name` TEXT (NOT NULL)
+    -   `last_name` TEXT
+    -   `email` TEXT (NOT NULL)
+    -   `phone` TEXT
+    -   `status` TEXT (`new`, `contacted`, `qualified`, `disqualified`, `closed`, NOT NULL)
+    -   `source` TEXT (e.g., `website`, `walk_in`, `ai_generated`)
+    -   `assigned_to` UUID (nullable, FK to `profiles.id`)
+    -   `preferred_vehicle_id` UUID (nullable, FK to `vehicles.id`)
+    -   `notes` TEXT
+    -   `last_contacted_at` TIMESTAMP WITH TIME ZONE
+    -   `follow_up_due_at` TIMESTAMP WITH TIME ZONE
+    -   `created_at` TIMESTAMP WITH TIME ZONE
+    -   `updated_at` TIMESTAMP WITH TIME ZONE
+
+4.  **`vehicles`**: Stores vehicle information, primarily from web scraping or CRM.
+    -   `id` UUID (PK)
+    -   `dealership_id` UUID (FK to `dealerships.id`, NOT NULL)
+    -   `vin` TEXT (UNIQUE, NOT NULL)
+    -   `make` TEXT
+    -   `model` TEXT
+    -   `year` INTEGER
+    -   `trim` TEXT
+    -   `mileage` INTEGER
+    -   `price` DECIMAL(10, 2)
+    -   `availability_status` TEXT (`in_stock`, `sold`, `pending`, NOT NULL)
+    -   `last_scraped_at` TIMESTAMP WITH TIME ZONE
+    -   `scraped_url` TEXT
+    -   `image_urls` TEXT[]
+    -   `details_json` JSONB (additional unstructured details)
+    -   `created_at` TIMESTAMP WITH TIME ZONE
+    -   `updated_at` TIMESTAMP WITH TIME ZONE
+
+5.  **`conversations`**: Stores AI-driven lead follow-up messages.
+    -   `id` UUID (PK)
+    -   `lead_id` UUID (FK to `leads.id`, NOT NULL)
+    -   `participant` TEXT (`ai`, `lead`, `bdc_rep`, NOT NULL)
+    -   `message` TEXT (NOT NULL)
+    -   `timestamp` TIMESTAMP WITH TIME ZONE (NOT NULL)
+    -   `sentiment` TEXT (e.g., `positive`, `neutral`, `negative`)
+    -   `intent` TEXT (e.g., `inquiry`, `appointment_request`, `disinterest`)
+    -   `ai_model_used` TEXT (e.g., `gpt-4-turbo`)
+    -   `created_at` TIMESTAMP WITH TIME ZONE
+
+6.  **`ai_configs`**: Configures AI model behavior per dealership.
+    -   `id` UUID (PK)
+    -   `dealership_id` UUID (FK to `dealerships.id`, UNIQUE, NOT NULL)
+    -   `model_name` TEXT (e.g., `gpt-4-turbo`, `claude-3-opus`)
+    -   `system_prompt` TEXT (NOT NULL)
+    -   `temperature` DECIMAL(3, 2)
+    -   `max_tokens` INTEGER
+    -   `follow_up_frequency_days` INTEGER
+    -   `created_at` TIMESTAMP WITH TIME ZONE
+    -   `updated_at` TIMESTAMP WITH TIME ZONE
+
+7.  **`alerts`**: Stores real-time notifications for BDC managers.
+    -   `id` UUID (PK)
+    -   `dealership_id` UUID (FK to `dealerships.id`, NOT NULL)
+    -   `profile_id` UUID (nullable, FK to `profiles.id` for target user)
+    -   `lead_id` UUID (nullable, FK to `leads.id`)
+    -   `type` TEXT (`critical`, `warning`, `info`, NOT NULL)
+    -   `message` TEXT (NOT NULL)
+    -   `is_read` BOOLEAN (DEFAULT FALSE)
+    -   `triggered_at` TIMESTAMP WITH TIME ZONE (NOT NULL)
+
+**Relationships:**
+-   `dealerships` ONE-TO-MANY `profiles`
+-   `dealerships` ONE-TO-MANY `leads`
+-   `dealerships` ONE-TO-ONE `ai_configs`
+-   `dealerships` ONE-TO-MANY `vehicles`
+-   `dealerships` ONE-TO-MANY `alerts`
+-   `auth.users` ONE-TO-ONE `profiles`
+-   `profiles` ONE-TO-MANY `leads` (assigned_to)
+-   `leads` ONE-TO-MANY `conversations`
+-   `leads` ONE-TO-ONE `vehicles` (preferred_vehicle_id)
+
+**Row Level Security (RLS):**
+-   All tables will have RLS enabled to ensure users can only access data belonging to their `dealership_id` and based on their `role`.
+-   `profiles`: Users can view/update their own profile. Managers/Admins can view/update all profiles within their dealership.
+-   `leads`, `vehicles`, `conversations`, `ai_configs`, `alerts`: Users can only access data associated with their `dealership_id`. BDC reps can only see leads assigned to them or unassigned leads. Managers/Admins can see all leads.
+
+## API Design
+Next.js API routes will act as a thin layer for request validation and forwarding to Supabase, or triggering Edge Functions.
+
+**Base URL:** `/api`
+
+1.  **Authentication**
+    -   `POST /api/auth/login`: Authenticates user.
+        -   Request: `{ email: string, password: string }`
+        -   Response: `{ access_token: string, refresh_token: string, user: Profile }`
+    -   `POST /api/auth/signup`: Registers new user.
+        -   Request: `{ email: string, password: string, firstName: string, lastName: string, dealershipId: string, role: string }`
+        -   Response: `{ user: Profile }` (after successful signup and profile creation)
+    -   `GET /api/auth/session`: Retrieves current user session.
+        -   Response: `{ user: Profile }`
+
+2.  **Leads (`/api/leads`)**
+    -   `GET /api/leads`: Retrieve a list of leads with optional filters (status, assigned_to, search).
+        -   Query Params: `dealershipId`, `status`, `assignedTo`, `search`, `page`, `limit`
+        -   Response: `{ data: Lead[], total: number }`
+    -   `GET /api/leads/[id]`: Retrieve a specific lead.
+        -   Response: `Lead`
+    -   `POST /api/leads`: Create a new lead.
+        -   Request: `Partial<Lead>`
+        -   Response: `Lead`
+    -   `PUT /api/leads/[id]`: Update an existing lead.
+        -   Request: `Partial<Lead>`
+        -   Response: `Lead`
+    -   `DELETE /api/leads/[id]`: Delete a lead.
+        -   Response: `{ message: string }`
+
+3.  **Vehicles (`/api/vehicles`)**
+    -   `GET /api/vehicles`: Retrieve a list of vehicles (from CRM or scraped data).
+        -   Query Params: `dealershipId`, `vin`, `make`, `model`, `search`, `page`, `limit`
+        -   Response: `{ data: Vehicle[], total: number }`
+    -   `GET /api/vehicles/[id]`: Retrieve a specific vehicle.
+        -   Response: `Vehicle`
+    -   `POST /api/vehicles/scrape`: Trigger a web scrape for vehicle details. This will invoke a Supabase Edge Function.
+        -   Request: `{ url: string, dealershipId: string, vin?: string }`
+        -   Response: `{ message: string, jobId: string }` (job ID for tracking)
+    -   `PUT /api/vehicles/[id]`: Update an existing vehicle (e.g., manual corrections).
+        -   Request: `Partial<Vehicle>`
+        -   Response: `Vehicle`
+
+4.  **Conversations (`/api/conversations`)**
+    -   `GET /api/conversations?leadId=[id]`: Retrieve all messages for a specific lead.
+        -   Response: `Conversation[]`
+    -   `POST /api/conversations`: Send a new message (either user or trigger AI response). This will invoke a Supabase Edge Function for AI processing.
+        -   Request: `{ leadId: string, participant: 'ai' | 'lead' | 'bdc_rep', message: string, triggerAI?: boolean }`
+        -   Response: `Conversation` (the newly created message)
+
+5.  **AI Configurations (`/api/ai-configs`)**
+    -   `GET /api/ai-configs?dealershipId=[id]`: Retrieve AI configuration for a dealership.
+        -   Response: `AIConfig`
+    -   `PUT /api/ai-configs/[id]`: Update AI configuration.
+        -   Request: `Partial<AIConfig>`
+        -   Response: `AIConfig`
+
+6.  **CRM Integrations (`/api/integrations`)**
+    -   `GET /api/integrations?dealershipId=[id]`: Retrieve CRM integration settings.
+        -   Response: `CRMIntegration` (without sensitive keys)
+    -   `PUT /api/integrations/[id]`: Update CRM integration settings.
+        -   Request: `Partial<CRMIntegration>` (includes encrypted credentials)
+        -   Response: `CRMIntegration`
+
+7.  **Alerts (`/api/alerts`)**
+    -   `GET /api/alerts`: Retrieve a list of alerts for the current user/dealership.
+        -   Query Params: `isRead`, `type`
+        -   Response: `Alert[]`
+    -   `PUT /api/alerts/[id]/read`: Mark an alert as read.
+        -   Response: `Alert`
+
+**Error Handling:**
+-   Standard HTTP status codes (400, 401, 403, 404, 500).
+-   JSON error responses: `{ "error": "Error message", "details": "More details" }`.
+
+## Authentication & Authorization
+-   **Authentication:**
+    -   Utilizes **Supabase Auth** for user registration, login, session management (JWTs), and password recovery.
+    -   Supports email/password authentication. OAuth (Google/Microsoft) can be added later if required for enterprise SSO.
+    -   Session tokens are securely handled by Supabase and Next.js, accessible via `supabase.auth.getSession()`.
+-   **Authorization:**
+    -   **Role-Based Access Control (RBAC):** Users are assigned a `role` (`admin`, `manager`, `bdc_rep`) in the `profiles` table.
+    -   **Row Level Security (RLS) in PostgreSQL:** Crucial for multi-tenancy.
+        -   Policies will be defined on all data tables (`leads`, `vehicles`, `conversations`, `ai_configs`, `alerts`) to ensure users can only access data associated with their `dealership_id`.
+        -   Additional RLS policies will restrict actions based on the user's `role` (e.g., only `admin` can modify `ai_configs`, `bdc_rep` can only modify leads assigned to them or unassigned).
+        -   Example RLS policy for `leads` table:
+            ```sql
+            CREATE POLICY "Enable read access for dealership users" ON public.leads
+            FOR SELECT USING (
+                auth.uid() IN (SELECT id FROM public.profiles WHERE dealership_id = leads.dealership_id)
+            );
+            CREATE POLICY "Enable insert for BDC reps and managers" ON public.leads
+            FOR INSERT WITH CHECK (
+                auth.uid() IN (SELECT id FROM public.profiles WHERE role IN ('bdc_rep', 'manager') AND dealership_id = leads.dealership_id)
+            );
+            CREATE POLICY "Enable update for assigned BDC reps and managers" ON public.leads
+            FOR UPDATE USING (
+                (assigned_to = auth.uid() AND auth.uid() IN (SELECT id FROM public.profiles WHERE role = 'bdc_rep' AND dealership_id = leads.dealership_id))
+                OR
+                (auth.uid() IN (SELECT id FROM public.profiles WHERE role = 'manager' AND dealership_id = leads.dealership_id))
+            );
+            ```
+-   **Middleware:** Next.js `middleware.ts` will check for authenticated sessions and redirect unauthenticated users from protected routes (e.g., `/dashboard`). It can also perform basic role checks before handing off to API routes.
+-   **Secure Credential Handling:** CRM API keys and other sensitive configurations will be stored encrypted in `dealerships.crm_config_json` (JSONB field). Decryption will occur only within secure Supabase Edge Functions with strict access controls.
+
+## Frontend Components
+The Next.js frontend will use a modular component structure:
+
+1.  **Layout Components (`src/components/layout`)**
+    -   `Header.tsx`: Navigation, user menu, dealership switcher.
+    -   `Sidebar.tsx`: Main application navigation (Dashboard, Leads, Inventory, Settings, Alerts).
+    -   `Footer.tsx`: Copyright, links to legal pages.
+    -   `Layout.tsx` (in `src/app/`): Overall page structure, wraps `Header`, `Sidebar`, `Footer`.
+
+2.  **UI Components (`src/components/ui`)**
+    -   `Button.tsx`, `Input.tsx`, `Checkbox.tsx`, `Select.tsx`, `Textarea.tsx`, `Table.tsx`, `Pagination.tsx`, `Dialog.tsx`, `AlertDialog.tsx`, `Spinner.tsx`, `Badge.tsx`, `Toast.tsx`.
+    -   These will be generic, reusable components styled with Tailwind CSS.
+
+3.  **Feature-Specific Components (`src/components/[feature]`)**
+    -   **Dashboard (`src/components/dashboard`)**
+        -   `LeadStatsWidget.tsx`: Displays lead count by status, conversion rates.
+        -   `RecentActivityFeed.tsx`: Shows recent lead updates, AI interactions, alerts.
+        -   `ManagerOverview.tsx`: Consolidated view of team performance.
+    -   **Leads (`src/components/leads`)**
+        -   `LeadList.tsx`: Table/card view of leads with search, filter, and pagination.
+        -   `LeadCard.tsx`: Individual lead summary for list view.
+        -   `LeadDetailView.tsx`: Comprehensive view of a single lead, including lead info, status, notes, associated vehicle, and conversation thread.
+        -   `LeadForm.tsx`: Component for creating/editing lead details.
+        -   `LeadStatusBadge.tsx`: Visual indicator for lead status.
+    -   **Inventory (`src/components/inventory`)**
+        -   `VehicleList.tsx`: Displays scraped vehicle inventory.
+        -   `VehicleCard.tsx`: Individual vehicle summary.
+        -   `VehicleDetailView.tsx`: Detailed view of a specific vehicle.
+        -   `ScrapeConfigForm.tsx`: Form to configure web scraping targets/frequency.
+    -   **AI Management (`src/components/ai`)**
+        -   `AIConfigForm.tsx`: Form for managing system prompt, model, temperature.
+        -   `ConversationThread.tsx`: Displays the chronological flow of messages between AI, lead, and BDC rep.
+        -   `AIChatInput.tsx`: Input field for BDC reps to manually send messages or trigger AI responses.
+    -   **Integrations (`src/components/integrations`)**
+        -   `CRMIntegrationSettings.tsx`: Form to configure CRM API credentials and sync settings.
+    -   **Alerts (`src/components/alerts`)**
+        -   `AlertNotification.tsx`: Displays individual alert messages.
+        -   `AlertList.tsx`: List of all active/resolved alerts.
+
+## State Management
+-   **Server State (Data Fetching & Caching):**
+    -   **React Query** will be used for managing server-side data (leads, vehicles, conversations, AI configs, etc.). It provides robust caching, automatic re-fetching, background updates, and optimistic UI updates.
+    -   `QueryClientProvider` will wrap the application.
+    -   Custom hooks like `useLeads`, `useVehicle`, `useConversations` will abstract data fetching and mutations.
+-   **Client State (Global UI State):**
+    -   **Zustand** will manage global, non-persistent UI state, such as:
+        -   `authStore.ts`: User authentication status, profile details, roles.
+        -   `notificationStore.ts`: In-app notification messages (toasts, alerts).
+        -   `sidebarStore.ts`: Sidebar open/closed state.
+        -   `activeConversationStore.ts`: Currently viewed lead conversation.
+-   **Local Component State:** Standard React `useState` and `useReducer` for component-specific UI state (e.g., form input values, modal visibility).
+
+## Data Flow
+1.  **User Interaction:** A user (BDC rep, manager) interacts with the Next.js frontend (e.g., views lead list, sends a message).
+2.  **Frontend (React Query/Zustand):**
+    -   UI components dispatch actions or call React Query hooks.
+    -   React Query hooks (`useMutation`, `useQuery`) send requests to Next.js API routes.
+    -   Zustand stores update global UI state as needed.
+3.  **Next.js API Routes:**
+    -   Receive requests from the frontend.
+    -   Validate request data (using Zod schemas).
+    -   For direct database operations (e.g., simple CRUD on `leads`), they interact with Supabase client (which respects RLS).
+    -   For complex operations (e.g., AI interaction, web scraping, CRM integration), they trigger specific **Supabase Edge Functions**.
+4.  **Supabase Edge Functions (`db/functions/`):**
+    -   **LLM Proxy (`llm-proxy.ts`):** Receives conversational prompts, calls external LLM API (e.g., OpenAI), processes responses, and stores conversation in `conversations` table.
+    -   **Web Scraper (`web-scraper.ts`):** Receives target URL, executes scraping logic, parses HTML, extracts vehicle data, and stores/updates `vehicles` table. May also store raw HTML in Supabase Storage.
+    -   **CRM Integrator:** Receives lead data or update requests, securely retrieves dealership's CRM API keys, and calls the appropriate CRM API (CDK/Reynolds&Reynolds) to create/update leads.
+    -   **Notification Service:** Triggers external notifications (email/SMS) for critical alerts.
+5.  **Supabase PostgreSQL Database:**
+    -   Stores all application data (`leads`, `vehicles`, `conversations`, `dealerships`, `profiles`, `ai_configs`, `alerts`).
+    -   **Row Level Security (RLS)** enforces data access based on user role and dealership ID.
+    -   **Realtime subscriptions** on tables (e.g., `leads`, `conversations`, `alerts`) push updates back to connected clients.
+6.  **Supabase Realtime:**
+    -   When data in subscribed tables changes (e.g., a new AI message, lead status update, manager alert), Supabase Realtime broadcasts these changes.
+7.  **Frontend (Supabase Realtime Listener/React Query):**
+    -   The frontend listens for Realtime events.
+    -   Upon receiving Realtime updates, React Query's cache is invalidated or updated, automatically re-rendering components with the latest data.
+    -   Zustand's `notificationStore` can be updated for immediate toast notifications.
+8.  **Supabase Storage:**
+    -   Stores unstructured data like scraped website content (e.g., full HTML of a vehicle page) or potentially AI conversation logs for auditing.
+
+## Real-time Features
+Supabase Realtime will be leveraged extensively to provide a highly collaborative and dynamic user experience.
+
+1.  **Live Lead Updates:**
+    -   BDC reps can see real-time changes to lead status, assignment, and notes made by other reps or managers within the same dealership.
+    -   `leads` table will have Realtime enabled. Frontend subscribes to changes on `leads` where `dealership_id` matches the current user's.
+2.  **AI Conversation Updates:**
+    -   When the AI sends a message in a lead's conversation thread, it will appear instantly without requiring a page refresh.
+    -   The `conversations` table will have Realtime enabled. The frontend component `ConversationThread.tsx` subscribes to new inserts and updates for the specific `lead_id` it's displaying.
+3.  **Manager Alerts:**
+    -   Managers receive instant in-app notifications and potentially external notifications (email/SMS via Supabase Edge Functions) for critical events:
+        -   New qualified leads generated by AI.
+        -   Lead sentiment shifts negatively.
+        -   Specific keywords detected in AI conversations (e.g., "appointment booking").
+        -   Missed follow-up deadlines.
+    -   The `alerts` table will have Realtime enabled. Frontend components (e.g., `AlertNotification.tsx` in the header, `AlertList.tsx` page) subscribe to new alerts relevant to the current user's role and dealership.
+4.  **Inventory Updates:**
+    -   When a new vehicle is scraped or updated, inventory lists can reflect changes in near real-time.
+    -   The `vehicles` table can have Realtime enabled, allowing the `VehicleList.tsx` to automatically update.
+
+**Implementation Details:**
+-   Use `supabase.from('table_name').on('event', payload => {...}).subscribe()` in React components or custom hooks.
+-   React Query's `useQuery` can be integrated with Realtime to automatically re-fetch or optimistically update its cache when Realtime events occur.
+
+## File Storage
+Supabase Storage will be used for object storage needs.
+
+1.  **Scraped HTML Content:**
+    -   When the web scraping module runs, it can store the full HTML content of scraped vehicle pages in a dedicated bucket (e.g., `web-scrape-cache`). This allows for auditing, debugging, or re-processing if needed.
+    -   Files will be stored with a unique identifier, potentially linked back to the `vehicles` table via `scraped_url` or a separate `scrape_jobs` table.
+2.  **Vehicle Images (Optional):**
+    -   If the system allows for manual upload of vehicle images or processes images from scraped sites, these can be stored in a `vehicle-images` bucket.
+    -   Supabase Storage offers image resizing and transformation capabilities.
+3.  **Conversation Logs / Attachments (Future):**
+    -   Though conversations are primarily text in the DB, if richer media or full conversation transcripts (beyond the `message` column) are required, they could be stored here.
+4.  **Access Control:**
+    -   Supabase Storage allows for granular access policies, ensuring that only authenticated users from the correct dealership can access their respective stored files.
+    -   Public access will be disabled for all buckets. Signed URLs can be used for temporary, secure access to private files.
+
+## Search & Filtering
+The application will provide robust search and filtering capabilities across key data entities.
+
+1.  **Lead Search & Filtering:**
+    -   **Search:** Full-text search on `first_name`, `last_name`, `email`, `phone`, `notes` fields in the `leads` table. This will utilize PostgreSQL's `tsvector` and `tsquery` for efficient indexing and searching.
+    -   **Filters:**
+        -   `status`: Dropdown for filtering by `new`, `contacted`, `qualified`, etc.
+        -   `assigned_to`: Filter by specific BDC rep or "unassigned".
+        -   `source`: Filter by lead origin (e.g., `website`, `ai_generated`).
+        -   `follow_up_due_at`: Range filter for upcoming or overdue follow-ups.
+        -   `dealership_id`: Implicitly filtered by RLS, but explicit on backend calls.
+    -   **Implementation:** Next.js API routes will translate frontend queries into PostgreSQL `WHERE` clauses and `to_tsquery` expressions.
+2.  **Vehicle Search & Filtering:**
+    -   **Search:** Full-text search on `make`, `model`, `year`, `trim`, `vin` in the `vehicles` table.
+    -   **Filters:**
+        -   `make`, `model`, `year`: Dropdowns/multi-selects.
+        -   `price`: Range slider.
+        -   `mileage`: Range slider.
+        -   `availability_status`: Checkboxes (`in_stock`, `sold`).
+    -   **Implementation:** Similar to lead filtering, using PostgreSQL `WHERE` clauses and `to_tsquery`.
+3.  **Real-time Search (Optional for high volume):**
+    -   For extremely high-volume, instant search requirements, consider integrating with a dedicated search service like Algolia or ElasticSearch, though PostgreSQL full-text search is sufficient for most BDC needs.
+
+## Notifications
+A multi-channel notification system will keep users informed of critical events.
+
+1.  **In-App Alerts (Primary):**
+    -   **Supabase Realtime:** As described in Real-time Features, `alerts` table changes are pushed to the frontend.
+    -   **Frontend Display:**
+        -   `AlertNotification.tsx`: A small, discreet component in the header/sidebar for unread alerts count. Clicking reveals a dropdown summary.
+        -   `AlertList.tsx`: A dedicated page or modal displaying a full list of alerts, filterable by type and read status.
+        -   **Toasts:** For transient, less critical feedback (e.g., "Lead updated successfully"), using a UI library toast component.
+2.  **Email Notifications (Critical Alerts):**
+    -   **Trigger:** Supabase database triggers or a scheduled job on an Edge Function will detect high-priority alerts (e.g., "New Qualified Lead", "Negative Sentiment Detected").
+    -   **Supabase Edge Function:** A dedicated `notification-sender.ts` Edge Function will be invoked.
+    -   **Email Service:** This Edge Function will integrate with an email sending service (e.g., SendGrid, Postmark, AWS SES) to send templated emails to BDC managers or specific reps.
+    -   **Configuration:** Email templates and recipient lists will be configurable per dealership within the `dealerships` table or `ai_configs`.
+3.  **SMS Notifications (Emergency Alerts - Optional):**
+    -   Similar to email, but for extremely urgent notifications (e.g., "Customer requesting immediate call-back"), leveraging a service like Twilio via a Supabase Edge Function.
+4.  **Notification Content:**
+    -   Alert messages in the `alerts` table will be descriptive and include links to the relevant lead or conversation.
+    -   Example Alert Types:
+        -   `LEAD_QUALIFIED`: AI identifies a highly interested lead.
+        -   `SENTIMENT_DETERIORATED`: AI detects negative sentiment in a conversation.
+        -   `FOLLOW_UP_OVERDUE`: Lead follow-up date has passed.
+        -   `NEW_CRM_LEAD_CREATED`: New lead successfully pushed to CRM.
+        -   `SCRAPE_FAILED`: Vehicle scraping encountered an error.
+
+## Error Handling
+A robust error handling strategy ensures application stability and provides useful feedback to users and developers.
+
+1.  **Frontend Error Handling:**
+    -   **React Error Boundaries:** A top-level error boundary (`src/app/ErrorBoundary.tsx` or similar) will catch rendering errors in React components, preventing the entire app from crashing and displaying a user-friendly fallback UI.
+    -   **React Query Error Handling:** `useMutation` and `useQuery` hooks provide `onError` callbacks to handle API call failures. This will be used to display `Toast` notifications for user-facing errors.
+    -   **Form Validation:** Client-side validation using Zod schemas to catch input errors before sending requests to the backend, providing immediate feedback.
+2.  **Backend Error Handling (Next.js API Routes & Edge Functions):**
+    -   **Centralized Error Middleware:** Next.js API routes will use a consistent pattern for catching errors and returning standardized JSON error responses (`{ error: string, details?: string }`) with appropriate HTTP status codes (e.g., 400 Bad Request, 401 Unauthorized, 403 Forbidden, 404 Not Found, 500 Internal Server Error).
+    -   **Supabase Edge Functions:** Edge Functions will implement `try-catch` blocks to gracefully handle external API call failures (LLM, CRM, scraping) and internal logic errors, logging them and returning informative errors to the Next.js API route.
+    -   **Database Errors:** Supabase client calls will handle PostgreSQL errors (e.g., constraint violations, RLS failures) and map them to appropriate HTTP responses.
+3.  **Logging & Monitoring:**
+    -   **Sentry:** Integrated for capturing and aggregating errors from both frontend (React) and backend (Next.js API routes, Supabase Edge Functions).
+    -   Errors will include context (user ID, request payload, stack trace) for faster debugging.
+4.  **User Feedback:**
+    -   Informative error messages will be displayed to the user for recoverable errors (e.g., "Invalid input", "Permission denied").
+    -   Generic error messages will be shown for unrecoverable errors with instructions to contact support, while detailed errors are logged to Sentry.
+
+## Performance Optimization
+Optimizing performance is critical for a smooth user experience and efficient resource utilization.
+
+1.  **Frontend (Next.js):**
+    -   **Image Optimization:** Use Next.js `Image` component for automatic image optimization (lazy loading, responsive sizing, modern formats like WebP).
+    -   **Code Splitting & Lazy Loading:** Next.js handles automatic code splitting. Dynamically import components (`next/dynamic`) for less frequently used parts of the application (e.g., complex settings forms, large dashboards) to reduce initial bundle size.
+    -   **Data Fetching Optimization:**
+        -   **React Query:** Aggressive caching, stale-while-revalidate strategy, background refetching, and query deduplication to minimize unnecessary network requests.
+        -   **Server Components:** Leverage Next.js Server Components for initial page renders to reduce client-side JavaScript and improve perceived loading speed.
+    -   **Static Asset Caching:** Use Vercel's CDN for caching static assets (JS, CSS, images).
+    -   **Minification & Compression:** Built into Next.js.
+2.  **Backend (Supabase Edge Functions & PostgreSQL):**
+    -   **Edge Function Warm-up:** Implement strategies to keep critical Edge Functions warm to minimize cold start latencies (e.g., periodic pings).
+    -   **Database Indexing:** Ensure all frequently queried columns (FKs, search fields, `created_at` for ordering) have appropriate PostgreSQL indexes.
+    -   **Connection Pooling:** Supabase handles connection pooling, but ensure application-level database interactions are efficient.
+    -   **Efficient Queries:** Avoid N+1 queries by using `JOIN` statements or `rpc` functions where appropriate.
+    -   **Rate Limiting:** Implement rate limiting on API routes and Edge Functions to protect against abuse and ensure fair usage, especially for LLM and CRM API calls.
+3.  **Web Scraping Module:**
+    -   **Caching:** Cache scraped results locally (e.g., in Supabase Storage with TTL) to avoid re-scraping the same URLs frequently.
+    -   **Asynchronous Processing:** Scrape jobs will be handled asynchronously by Edge Functions to avoid blocking the main application.
+    -   **Resource Management:** Carefully manage concurrency and memory usage within the scraping module.
+
+## Testing Strategy
+A comprehensive testing strategy ensures code quality, reliability, and maintainability.
+
+1.  **Unit Tests (Vitest):**
+    -   **Scope:** Individual functions, utility helpers, pure components, and service methods.
+    -   **Framework:** Vitest with React Testing Library for components.
+    -   **Coverage:** Aim for high coverage on core business logic (e.g., `leadService.ts`, `aiService.ts`, `common/utils`).
+    -   **Mocks:** Mock external dependencies (Supabase client, LLM APIs, CRM APIs) using `vi.mock` to isolate the unit under test.
+    -   **Location:** `src/tests/unit/`.
+2.  **Integration Tests (Vitest / Next.js API Routes):**
+    -   **Scope:** Interactions between components, API routes and services, Edge Functions with external APIs (mocked).
+    -   **Framework:** Vitest for `api` routes, using `msw` (Mock Service Worker) for mocking external HTTP requests (LLMs, CRMs).
+    -   **Database Interactions:** For testing API routes, use a dedicated test database schema or transactional rollbacks to ensure tests are isolated and don't affect shared data. Supabase CLI can facilitate local testing.
+    -   **Location:** `src/tests/integration/`.
+3.  **End-to-End (E2E) Tests (Playwright):**
+    -   **Scope:** Simulate full user journeys through the application from login to complex feature interactions (e.g., creating a lead, triggering AI follow-up, viewing alerts).
+    -   **Framework:** Playwright.
+    -   **Environment:** Run against a deployed staging environment or a locally running instance with a clean test database.
+    -   **Key Scenarios:** User authentication, lead lifecycle management, AI conversational flow, vehicle data scraping and display, CRM integration (mocked responses).
+    -   **Location:** `src/tests/e2e/`.
+4.  **Database Migration Tests (Supabase CLI):**
+    -   Use `supabase migration diff` and `supabase migration up` to ensure database schema changes are correctly applied and reversible.
+    -   Automate migration checks in CI/CD.
+5.  **Manual / Exploratory Testing:**
+    -   Essential for verifying UX, accessibility, and identifying edge cases not covered by automated tests.
+6.  **CI/CD Integration:** All automated tests will be run as part of the GitHub Actions CI pipeline on every pull request.
+
+## Deployment Configuration
+Deployment will leverage Vercel for the frontend and Supabase Platform for the backend, ensuring a robust, scalable, and easy-to-manage infrastructure.
+
+1.  **Frontend (Next.js on Vercel):**
+    -   **Vercel Integration:** Connect GitHub repository to Vercel. Vercel automatically detects Next.js applications.
+    -   **Environment Variables:** Securely store `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` as environment variables in Vercel.
+    -   **Build Process:** Vercel automatically runs `npm install` and `next build`.
+    -   **CDN & Edge Caching:** Vercel provides global CDN for static assets and intelligent caching for Server Components, ensuring fast load times.
+    -   **Serverless Functions:** Next.js API routes are deployed as serverless functions on Vercel's edge network.
+    -   **Custom Domain:** Configure a custom domain for the application.
+2.  **Backend (Supabase Platform):**
+    -   **Database:** PostgreSQL database hosted on Supabase, managed via the Supabase Dashboard.
+    -   **Auth:** Supabase Auth handles user authentication.
+    -   **Storage:** Supabase Storage for object storage.
+    -   **Realtime:** Supabase Realtime for WebSocket communication.
+    -   **Edge Functions:**
+        -   **Deployment:** Edge Functions (LLM proxy, web scraper, CRM integrator, notification service) are deployed directly from the `db/functions` directory within the Supabase project.
+        -   **Environment Variables:** Sensitive API keys (LLM, CRM) for Edge Functions are stored as Supabase secrets/environment variables and securely accessed within the functions.
+        -   **`supabase/config.toml`:** Configures Edge Function deployment and routing.
+    -   **Database Migrations:** `migrations/` directory managed with `supabase migration` CLI commands. Applied automatically in production via CI/CD or manually.
+    -   **Backups:** Supabase provides automatic daily backups and point-in-time recovery.
+3.  **CI/CD (GitHub Actions - `.github/workflows/ci.yml`):**
+    -   **Linting & Formatting:** Runs ESLint and Prettier checks.
+    -   **Testing:** Executes unit, integration, and E2E tests.
+    -   **Vercel Deployment:** Triggers Vercel deployments on `main` branch merges (production) and feature branch pushes (preview deployments).
+    -   **Supabase CLI Checks:** `supabase db diff` to detect unapplied migrations. `supabase functions deploy` for Edge Functions.
+    -   **Secrets Management:** GitHub Actions secrets will store necessary tokens for Vercel deployment and Supabase CLI.
+
+## Monitoring & Analytics
+Comprehensive monitoring and analytics will provide insights into application health, performance, and user behavior.
+
+1.  **Application Performance Monitoring (APM):**
+    -   **Vercel Analytics:** Provides insights into frontend performance (Core Web Vitals), API route cold starts, and function durations.
+    -   **Supabase Monitoring:** Integrated dashboard for PostgreSQL (query performance, connections, CPU usage), Realtime usage, and Edge Function logs/invocations.
+    -   **Sentry:** Primary tool for error tracking. Captures and aggregates errors from both frontend (React) and backend (Next.js API routes, Supabase Edge Functions), providing context, stack traces, and user impact.
+2.  **Infrastructure Monitoring:**
+    -   Supabase's built-in monitoring covers database and service health.
+    -   Vercel provides logs and metrics for Next.js deployments.
+3.  **Logging:**
+    -   **Centralized Logging:** All application logs (frontend, API routes, Edge Functions) will be streamed to a centralized logging service (e.g., Logtail (Supabase integrated), Datadog, or directly to Sentry).
+    -   Structured logging (JSON) for easier parsing and querying.
+4.  **User Analytics:**
+    -   **PostHog / Google Analytics 4:** Integrated into the Next.js frontend to track user journeys, feature adoption, conversion funnels (e.g., lead progression), and identify usage patterns.
+    -   Events will be tracked for key actions: Lead created, AI conversation started, vehicle scraped, CRM lead pushed.
+    -   Anonymized data collection to comply with privacy regulations.
+5.  **Alerting:**
+    -   Configure alerts in Sentry for critical error rates or specific error types.
+    -   Set up alerts in Supabase for database performance issues (e.g., high CPU, disk usage).
+    -   Automated notifications for managers for critical business events (as described in **Notifications**).
+6.  **Custom Dashboards:** Build custom dashboards in a tool like Grafana (if self-hosting metrics) or using built-in dashboards from monitoring services to visualize key performance indicators (KPIs) and business metrics.
+
+## Security Considerations
+Security is paramount for an enterprise application handling sensitive dealership and customer data.
+
+1.  **Authentication & Authorization:**
+    -   **Supabase Auth:** Robust, secure user authentication with JWTs, email verification, password hashing.
+    -   **Row Level Security (RLS):** Strictly enforced on all database tables to prevent cross-dealership data access and enforce role-based permissions.
+    -   **Middleware:** Next.js middleware verifies authentication tokens and redirects unauthorized requests.
+2.  **Data Protection:**
+    -   **Encryption at Rest & In Transit:** Supabase encrypts all data at rest and uses SSL/TLS for data in transit.
+    -   **Sensitive Data Encryption:** CRM API keys and other confidential configurations stored in `dealerships.crm_config_json` will be encrypted using PostgreSQL's `pgsodium` extension or a similar mechanism at the application layer, ensuring they are only decrypted within secure Edge Functions.
+    -   **Input Validation:** Strict server-side validation using Zod schemas on all API endpoints to prevent injection attacks (SQL, XSS).
+3.  **Web Scraping Security:**
+    -   **Rate Limiting:** Implement strict rate limiting on scraping requests to avoid IP blacklisting or overwhelming target websites.
+    -   **IP Rotation (Future):** For high-volume or aggressive scraping, consider integrating with proxy services for IP rotation to avoid detection.
+    -   **Responsible Scraping:** Adhere to `robots.txt` guidelines and avoid scraping sensitive or private information.
+    -   **Secure Environment:** Scraping module runs within isolated Supabase Edge Functions, limiting its access to other parts of the system.
+4.  **API Security:**
+    -   **JWT Validation:** All protected API routes validate incoming JWTs from Supabase.
+    -   **CORS:** Properly configure CORS headers.
+    -   **Environment Variables:** All API keys and secrets stored as environment variables (Vercel, Supabase Secrets) and never hardcoded.
+5.  **Supply Chain Security:**
+    -   Regularly update dependencies to patch known vulnerabilities.
+    -   Use `npm audit` or similar tools in CI/CD.
+6.  **Regular Security Audits:** Conduct periodic security reviews and penetration testing.
+
+## Scalability Planning
+The chosen technology stack and architectural patterns are inherently scalable.
+
+1.  **Frontend (Next.js on Vercel):**
+    -   **Serverless Scaling:** Vercel automatically scales Next.js API routes and Server Components based on demand, handling traffic spikes without manual intervention.
+    -   **CDN Caching:** Global CDN ensures low latency for static assets and cached content.
+2.  **Backend (Supabase Platform):**
+    -   **PostgreSQL:** Supabase manages a highly scalable PostgreSQL database. Scaling up/out (read replicas) can be configured as data volume and query load increase. Proper indexing and query optimization are key.
+    -   **Supabase Edge Functions:** Edge Functions are serverless and scale automatically based on invocation rates. They are deployed globally for low latency.
+    -   **Supabase Realtime:** Built to handle millions of concurrent connections, ideal for growing real-time needs.
+    -   **Storage:** Supabase Storage is object storage that scales automatically.
+3.  **Application Logic:**
+    -   **Stateless Services:** Design Next.js API routes and Supabase Edge Functions to be stateless where possible, allowing them to scale horizontally.
+    -   **Asynchronous Processing:** Long-running tasks like web scraping and complex CRM integrations are handled asynchronously by Edge Functions, preventing blocking of primary request flows.
+    -   **Queueing (Future):** For extremely high-volume tasks (e.g., scraping thousands of vehicles simultaneously), consider integrating a dedicated message queue (e.g., AWS SQS, Supabase Edge Runtime's built-in queueing capabilities) to decouple and manage job processing more robustly.
+4.  **Database Optimization:**
+    -   **Indexing:** Continuously monitor query performance and add/optimize indexes as needed.
+    -   **Connection Pooling:** Supabase handles this, but understanding database connection patterns is important.
+    -   **Denormalization:** Strategically denormalize data for read-heavy operations if performance bottlenecks arise, though generally avoided initially.
+    -   **Partitions (Future):** For very large tables (e.g., `conversations`), consider PostgreSQL table partitioning.
+
+## Development Workflow
+A structured development workflow will facilitate collaboration, maintain code quality, and ensure efficient delivery.
+
+1.  **Version Control (Git & GitHub):**
+    -   **Gitflow Workflow:** Use `main` for production-ready code, `develop` for integration, and `feature` branches for new features/bug fixes.
+    -   **Pull Requests (PRs):** All code changes go through PRs, requiring at least one reviewer approval.
+    -   **Descriptive Commit Messages:** Follow conventional commit guidelines.
+2.  **Task Management:**
+    -   Use a tool like Jira, GitHub Projects, or Trello to manage tasks, assign ownership, and track progress.
+    -   Break down features into smaller, manageable user stories or tasks.
+3.  **Code Standards:**
+    -   **ESLint & Prettier:** Enforce consistent code style and identify potential issues. Configured with a `.eslintrc.json` and `.prettierrc`.
+    -   **TypeScript:** Strict typing used throughout the project to catch errors early.
+    -   **Code Reviews:** Mandatory for all PRs to ensure quality, identify bugs, and share knowledge.
+4.  **CI/CD (GitHub Actions):**
+    -   Automate linting, testing, and deployment processes on every PR and merge to `develop`/`main`.
+    -   Provides fast feedback on code changes.
+5.  **Local Development Environment:**
+    -   `npm run dev`: Standard Next.js development server.
+    -   `supabase start`: For local Supabase development (DB, Auth, Edge Functions).
+    -   `.env.local` for local environment variables.
+6.  **Documentation:**
+    -   **README.md:** Project setup, scripts, key commands.
+    -   **ARCHITECTURE.md:** High-level system architecture and key design decisions.
+    -   **OpenAPI.yaml:** API specifications for backend endpoints.
+    -   **Inline Comments:** Document complex logic and challenging parts of the codebase.
+7.  **Communication:**
+    -   Regular stand-ups, sprint planning, and retrospectives.
+    -   Use Slack/Teams for real-time communication.
+8.  **Environment Management:**
+    -   Separate environments for development, staging, and production.
+    -   Use `.env.local`, Vercel Environment Variables, and Supabase Secrets to manage configuration for each environment.
