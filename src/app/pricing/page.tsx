@@ -1,15 +1,64 @@
+'use client'
+
 import Link from 'next/link'
+import { useEffect, useState } from 'react'
+import { createClientComponentClient } from '@/lib/supabase/client'
+import type { Database } from '@/lib/supabase/types'
 import { Card } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { Footer } from '@/components/layout/Footer'
 
-const tiers = [
-  { name: 'Starter', price: '$0', desc: 'For evaluation and small teams', cta: 'Start Free' },
-  { name: 'Pro', price: '$249/mo', desc: 'For growing dealerships', cta: 'Upgrade' },
-  { name: 'Enterprise', price: 'Custom', desc: 'Advanced controls and SLAs', cta: 'Contact Sales' },
-]
+type ProfileRow = Database['public']['Tables']['profiles']['Row']
 
 export default function PricingPage() {
+  const supabase = createClientComponentClient()
+  const [userCount, setUserCount] = useState(0)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+
+  useEffect(() => {
+    const loadUserStats = async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+      setIsLoggedIn(!!user)
+
+      const { count } = await supabase
+        .from('profiles')
+        .select('id', { count: 'exact' })
+      
+      setUserCount(count || 0)
+    }
+
+    loadUserStats()
+  }, [supabase])
+
+  const tiers = [
+    { 
+      name: 'Starter', 
+      price: '$0', 
+      desc: 'For evaluation and small teams',
+      features: ['Up to 100 leads/month', 'Basic AI responses', 'Email support'],
+      cta: 'Start Free',
+      href: '/auth/signup',
+      popular: false
+    },
+    { 
+      name: 'Pro', 
+      price: '$249/mo', 
+      desc: 'For growing dealerships',
+      features: ['Unlimited leads', 'Advanced AI models', 'CRM integrations', 'Priority support'],
+      cta: isLoggedIn ? 'Upgrade' : 'Get Started',
+      href: isLoggedIn ? '/dashboard' : '/auth/signup',
+      popular: true
+    },
+    { 
+      name: 'Enterprise', 
+      price: 'Custom', 
+      desc: 'Advanced controls and SLAs',
+      features: ['Custom AI training', 'Dedicated support', 'SLA guarantees', 'On-premise options'],
+      cta: 'Contact Sales',
+      href: '/contact',
+      popular: false
+    },
+  ]
   return (
     <div className="min-h-screen bg-[hsl(var(--background))] relative flex flex-col">
       {/* Header */}
@@ -40,16 +89,40 @@ export default function PricingPage() {
           <div>
             <h1 className="text-3xl font-bold text-white tracking-tight">Pricing</h1>
             <p className="text-gray-300 mt-2">Simple plans designed for dealerships of all sizes.</p>
+            <div className="mt-4 text-sm text-gray-400">
+              Join {userCount.toLocaleString()} users already using DealerFlow AI
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {tiers.map((t) => (
-              <Card key={t.name} className="p-6">
+              <Card key={t.name} className={`p-6 relative ${t.popular ? 'cosmic-border' : ''}`}>
+                {t.popular && (
+                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                    <span className="bg-[hsl(var(--cosmic-purple))] text-white px-3 py-1 rounded-full text-sm font-medium">
+                      Most Popular
+                    </span>
+                  </div>
+                )}
                 <h3 className="text-xl font-semibold text-white">{t.name}</h3>
                 <p className="text-3xl font-bold text-white mt-2">{t.price}</p>
                 <p className="text-gray-300 mt-2">{t.desc}</p>
-                <div className="mt-4">
-                  <Button className="cosmic-gradient w-full">{t.cta}</Button>
+                
+                <ul className="mt-4 space-y-2">
+                  {t.features.map((feature, idx) => (
+                    <li key={idx} className="flex items-center text-sm text-gray-300">
+                      <span className="text-[hsl(var(--cosmic-purple))] mr-2">✓</span>
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+                
+                <div className="mt-6">
+                  <Link href={t.href}>
+                    <Button className={t.popular ? "cosmic-gradient w-full" : "w-full"}>
+                      {t.cta}
+                    </Button>
+                  </Link>
                 </div>
               </Card>
             ))}

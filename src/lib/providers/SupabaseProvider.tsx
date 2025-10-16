@@ -76,7 +76,8 @@ export function SupabaseProvider({ children }: { children: React.ReactNode }) {
         setUser(session?.user ?? null)
         
         if (session?.user) {
-          await fetchProfile(session.user.id)
+          // Try to fetch profile but don't block loading
+          fetchProfile(session.user.id).catch(console.error)
         }
       } catch (error) {
         console.error('Error getting initial session:', error)
@@ -92,7 +93,8 @@ export function SupabaseProvider({ children }: { children: React.ReactNode }) {
         setUser(session?.user ?? null)
         
         if (session?.user) {
-          await fetchProfile(session.user.id)
+          // Try to fetch profile but don't block loading
+          fetchProfile(session.user.id).catch(console.error)
         } else {
           setProfile(null)
         }

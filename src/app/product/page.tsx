@@ -1,9 +1,48 @@
+'use client'
+
 import Link from 'next/link'
+import { useEffect, useState } from 'react'
+import { createClientComponentClient } from '@/lib/supabase/client'
+import type { Database } from '@/lib/supabase/types'
 import { Card } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { Footer } from '@/components/layout/Footer'
 
+type LeadRow = Database['public']['Tables']['leads']['Row']
+type ConversationRow = Database['public']['Tables']['conversations']['Row']
+
 export default function ProductPage() {
+  const supabase = createClientComponentClient()
+  const [stats, setStats] = useState({
+    totalLeads: 0,
+    totalConversations: 0,
+    activeDealerships: 0,
+    aiResponses: 0
+  })
+
+  useEffect(() => {
+    const loadStats = async () => {
+      const [leadsResult, conversationsResult, dealershipsResult] = await Promise.all([
+        supabase.from('leads').select('id', { count: 'exact' }),
+        supabase.from('conversations').select('id', { count: 'exact' }),
+        supabase.from('dealerships').select('id', { count: 'exact' })
+      ])
+
+      const aiResponses = await supabase
+        .from('conversations')
+        .select('id', { count: 'exact' })
+        .eq('participant', 'ai')
+
+      setStats({
+        totalLeads: leadsResult.count || 0,
+        totalConversations: conversationsResult.count || 0,
+        activeDealerships: dealershipsResult.count || 0,
+        aiResponses: aiResponses.count || 0
+      })
+    }
+
+    loadStats()
+  }, [supabase])
   return (
     <div className="min-h-screen bg-[hsl(var(--background))] relative">
       {/* Header */}
@@ -39,8 +78,31 @@ export default function ProductPage() {
           <Card className="p-6">
             <h2 className="text-xl font-semibold text-white">Why DealerFlow AI</h2>
             <p className="text-gray-300 mt-2">AI-powered follow-ups, real-time vehicle data, CRM integrations, and alerts.</p>
-            <div className="mt-4">
-              <Button className="cosmic-gradient">Get Started</Button>
+            
+            {/* Live Stats */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-white">{stats.totalLeads.toLocaleString()}</div>
+                <div className="text-sm text-gray-400">Leads Processed</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-white">{stats.totalConversations.toLocaleString()}</div>
+                <div className="text-sm text-gray-400">Conversations</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-white">{stats.activeDealerships}</div>
+                <div className="text-sm text-gray-400">Active Dealerships</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-white">{stats.aiResponses.toLocaleString()}</div>
+                <div className="text-sm text-gray-400">AI Responses</div>
+              </div>
+            </div>
+            
+            <div className="mt-6">
+              <Link href="/auth/signup">
+                <Button className="cosmic-gradient">Get Started</Button>
+              </Link>
             </div>
           </Card>
 
